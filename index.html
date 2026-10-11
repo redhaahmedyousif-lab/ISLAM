@@ -2,7 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
 <title>مراجعة التربية الإسلامية</title>
 <meta name="description" content="مراجعة تفاعلية لمادة التربية الإسلامية للصف الثاني الإعدادي - الاختبار الأول">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,6 +35,7 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{background:var(--bg);color:var(--text);font-family:"Tajawal",system-ui,sans-serif;font-size:17px;line-height:1.75}
 button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
 .wrap{max-width:900px;margin:0 auto;padding:0 16px}
@@ -165,6 +167,8 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;padding:20px 0 30px}
 .modal-box label small{display:block;color:var(--muted)}
 .modal-box .hint{font-size:.85rem;color:var(--muted)}
 
+.lbl-s{display:none}
+
 /* الحفظ والاستعادة */
 .save-status{font-size:.85rem;opacity:.9;margin-top:8px}
 .hdr-btn.reset{background:rgba(185,28,28,.35);border-color:rgba(255,255,255,.45)}
@@ -181,7 +185,7 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;padding:20px 0 30px}
 :root[data-theme="dark"] .seg-btn.active{color:#06201c}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .seg-btn.active{color:#06201c}}
 .hint a{color:var(--primary);font-weight:700}
-.doc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);overflow-wrap:anywhere}
+.doc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);overflow-wrap:break-word}
 .doc-cover{text-align:center;border:2px solid var(--primary);border-radius:14px;padding:14px;margin-bottom:10px;line-height:1.9}
 .doc-cover h2{margin:6px 0;color:var(--primary);font-size:1.5rem}
 .doc-cover .big{font-weight:800;font-size:1.1rem}
@@ -237,6 +241,71 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;padding:20px 0 30px}
 .ps .st{font-size:10.5pt;border-radius:999px;padding:0 8px;margin-inline-start:6px;white-space:nowrap}
 .ps .st.ok{background:#dcfce7;color:#15803d}.ps .st.no{background:#fee2e2;color:#b91c1c}.ps .st.pend{background:#eee;color:#555}
 .ps .ps-foot{text-align:center;font-size:10pt;color:#555;margin-top:12px}
+/* ===== الجوال (مثل Galaxy S22 بعرض 360px) ===== */
+@media (max-width:600px){
+  body{font-size:15.5px;line-height:1.65}
+  .wrap{padding:0 12px}
+  header{padding:12px 0 10px}
+  .top-row{flex-wrap:nowrap;align-items:center;gap:8px}
+  header h1{font-size:1.12rem;line-height:1.4}
+  header p{font-size:.8rem;margin-top:0}
+  .score-box{min-width:0;padding:4px 10px;border-radius:10px;flex:0 0 auto}
+  .score-box b{font-size:1.05rem}
+  .score-box small{font-size:.68rem;display:block;line-height:1.2}
+  .save-status{font-size:.72rem;margin-top:4px}
+  .hdr-actions{margin-top:8px;gap:6px;flex-wrap:nowrap}
+  .hdr-btn{padding:4px 10px;font-size:.8rem;white-space:nowrap}
+  .hdr-btn.reset{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .lbl-l{display:none}.lbl-s{display:inline}
+  nav.tabs .wrap{padding-top:7px;padding-bottom:7px;gap:5px}
+  .tab{padding:4px 11px;font-size:.85rem}
+  main{padding:14px 0 40px}
+  .section-head{flex-wrap:nowrap}
+  .section-head h2{font-size:1.1rem}
+  .section-head .btn{padding:4px 10px;font-size:.78rem;white-space:nowrap}
+  .progress{margin:6px 0 12px}
+  .part-title{font-size:1rem;margin:18px 0 8px}
+  .note{font-size:.88rem;padding:7px 11px}
+  .ref{padding:10px 12px;border-radius:12px}
+  .quran{font-size:1.18rem;line-height:2}
+  .q{padding:11px 12px;border-radius:12px;margin-bottom:10px}
+  .q-head{gap:8px}
+  .num{width:24px;height:24px;font-size:.78rem}
+  .badge{font-size:.66rem;padding:1px 7px}
+  .q-body{margin-top:8px}
+  .opts{gap:6px}
+  .opt{padding:8px 11px;border-radius:10px}
+  .tf .opt{font-size:1.15rem;padding:6px}
+  .btn{padding:7px 14px;font-size:.92rem}
+  .row{gap:8px;margin-top:8px}
+  textarea{padding:8px 10px;font-size:16px}
+  input.blank{min-width:90px;max-width:130px;font-size:16px}
+  .match-row select{font-size:15px}
+  .hadith{font-size:1.1rem;line-height:2.2}
+  .order li{padding:6px 8px;gap:7px}
+  .order .pos{font-size:.72rem;padding:0 6px}
+  .order li.quran-item .txt{font-size:1.02rem;line-height:1.9}
+  .order .mv button{width:34px;height:26px}
+  .feedback{padding:8px 11px;font-size:.92rem}
+  .self .btn{margin-top:4px}
+  .kw{font-size:.76rem}
+  .summary{padding:14px}
+  .big-score{font-size:2rem}
+  .summary td,.summary th{padding:6px 4px;font-size:.88rem}
+  .print-cta .btn{width:100%}
+  .doc{padding:12px;border-radius:12px;font-size:.93rem}
+  .doc-cover{padding:10px}
+  .doc-cover h2{font-size:1.2rem}
+  .doc .doc-h{font-size:1.05rem;margin-top:18px}
+  .doc h3{font-size:.95rem}
+  .doc .doc-text{font-size:1.08rem;line-height:2;padding:6px 9px}
+  .doc ul,.doc ol{padding-inline-start:20px}
+  .seg-btn{padding:6px 12px;font-size:.88rem}
+  .modal-box{padding:14px}
+  .modal-box label{padding:4px 0}
+  footer{padding:12px 0 20px}
+}
+
 </style>
 </head>
 <body>
@@ -251,9 +320,9 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;padding:20px 0 30px}
     </div>
     <div class="save-status" id="saveStatus"></div>
     <div class="hdr-actions">
-      <button class="hdr-btn" id="printBtn">🖨 طباعة / PDF</button>
-      <button class="hdr-btn" id="themeBtn">🌓 الوضع الليلي</button>
-      <button class="hdr-btn reset" id="resetBtn">🗑 إعادة ضبط الاختبار / مسح الإجابات المحفوظة</button>
+      <button class="hdr-btn" id="printBtn" aria-label="طباعة / PDF">🖨 <span class="lbl-l">طباعة / </span>PDF</button>
+      <button class="hdr-btn" id="themeBtn" aria-label="الوضع الليلي">🌓<span class="lbl-l"> الوضع الليلي</span></button>
+      <button class="hdr-btn reset" id="resetBtn" aria-label="إعادة ضبط الاختبار / مسح الإجابات المحفوظة">🗑 <span class="lbl-l">إعادة ضبط الاختبار / مسح الإجابات المحفوظة</span><span class="lbl-s">إعادة ضبط / مسح الإجابات</span></button>
     </div>
   </div>
 </header>
@@ -1055,11 +1124,27 @@ function renderNotes(){
   app.appendChild(el("p",{class:"hint"}, view === "teacher"
     ? `مذكرة قسم التربية الإسلامية كاملة كما وزّعها المعلم. <a href="pdf/مذكرة-المعلم-الأصلية.pdf" target="_blank" rel="noopener">📄 فتح المذكرة الأصلية (PDF)</a>`
     : "ملخص منظّم لكل الدروس يجمع المذكرة وأسئلة المراجعة والأرقام المهمة."));
-  app.appendChild(el("div",{class:"doc"}, view === "teacher" ? NOTES_TEACHER : NOTES_GENERAL));
+  const doc = el("div",{class:"doc"}, view === "teacher" ? NOTES_TEACHER : NOTES_GENERAL);
+  if (matchMedia("(max-width:600px)").matches) verticalTables(doc);
+  app.appendChild(doc);
   const cta = el("div",{class:"print-cta"});
   const b = el("button",{class:"btn"}, `🖨 طباعة / حفظ ${view==="teacher"?"مذكرة المعلم":"المذكرة العامة"} PDF`);
   b.onclick = () => printNow("notes-" + view, "1");
   cta.appendChild(b); app.appendChild(cta);
+}
+
+// على الجوال: تحويل الجداول العريضة إلى جداول عمودية حتى لا تنكسر الكلمات
+function verticalTables(root){
+  root.querySelectorAll("table").forEach(t => {
+    const rows = [...t.rows], cols = rows[0].cells.length;
+    if (cols <= 3 && !(rows.length === 1 && cols === 3)) return;
+    let h = "";
+    if (rows.length === 2 && rows[0].cells[0].tagName === "TH")
+      h = [...rows[0].cells].map((c,i) => `<tr><th>${c.innerHTML}</th><td>${rows[1].cells[i]?.innerHTML ?? ""}</td></tr>`).join("");
+    else
+      h = rows.flatMap(r => [...r.cells]).map(c => `<tr><td>${c.innerHTML}</td></tr>`).join("");
+    t.innerHTML = h;
+  });
 }
 
 /* النتيجة */
