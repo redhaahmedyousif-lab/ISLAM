@@ -174,6 +174,41 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;padding:20px 0 30px}
 .q.resume{outline:3px solid var(--gold);outline-offset:3px;transition:outline-color .5s}
 .wrong-item .wy{color:var(--bad);margin-top:4px}
 
+/* المذكرة */
+.seg{display:inline-flex;border:1.5px solid var(--primary);border-radius:12px;overflow:hidden;margin:4px 0 6px;flex-wrap:wrap}
+.seg-btn{border:none;background:transparent;color:var(--primary);padding:8px 16px;cursor:pointer;font-weight:700}
+.seg-btn.active{background:var(--primary);color:#fff}
+:root[data-theme="dark"] .seg-btn.active{color:#06201c}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .seg-btn.active{color:#06201c}}
+.hint a{color:var(--primary);font-weight:700}
+.doc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);overflow-wrap:anywhere}
+.doc-cover{text-align:center;border:2px solid var(--primary);border-radius:14px;padding:14px;margin-bottom:10px;line-height:1.9}
+.doc-cover h2{margin:6px 0;color:var(--primary);font-size:1.5rem}
+.doc-cover .big{font-weight:800;font-size:1.1rem}
+.doc-cover .warn{color:var(--bad);font-weight:700;margin-top:6px}
+.doc .doc-h{color:var(--bad);text-align:center;font-size:1.25rem;margin:26px 0 8px;padding-top:12px;border-top:2px dashed var(--border)}
+.doc h3{font-size:1.02rem;margin:14px 0 4px;color:var(--primary)}
+.doc p,.doc ul,.doc ol{margin:4px 0}
+.doc ol.alpha{list-style-type:arabic-indic}
+.doc .doc-text{font-family:"Amiri",serif;font-size:1.25rem;line-height:2.2;background:var(--gold-soft);border-radius:10px;padding:8px 12px}
+.doc table{width:100%;border-collapse:collapse;margin:6px 0;font-size:.95rem}
+.doc th,.doc td{border:1px solid var(--border);padding:5px 8px;text-align:center;vertical-align:middle}
+.doc th{background:var(--primary-soft)}
+.doc .tag{font-size:.8rem;background:var(--gold-soft);color:var(--gold);border-radius:999px;padding:0 8px}
+.doc .tip{background:var(--primary-soft);border-radius:10px;padding:6px 12px}
+.doc .x-list li{color:var(--bad)}
+.doc .doc-end{text-align:center;font-weight:800;color:var(--primary);margin-top:18px}
+@media (max-width:560px){.doc table{font-size:.82rem}.doc th,.doc td{padding:4px}}
+.ps .doc{background:#fff;border:none;box-shadow:none;padding:0 1px;font-size:12pt}
+.ps .doc table{width:calc(100% - 2px)}
+.ps .doc .doc-h{break-after:avoid;color:#b91c1c;border-color:#ccc}
+.ps .doc h3{break-after:avoid;color:#0f766e}
+.ps .doc table,.ps .doc .doc-text,.ps .doc li{break-inside:avoid}
+.ps .doc th,.ps .doc td{border-color:#bbb}
+.ps .doc th{background:#e0f2ef}
+.ps .doc .doc-text,.ps .doc .tag{background:#fbf3e2}
+.ps .doc .tip{background:#e0f2ef}
+
 /* ورقة الطباعة */
 #printSheet{display:none}
 @media print{
@@ -195,7 +230,7 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;padding:20px 0 30px}
 .ps .opts-p{display:flex;flex-wrap:wrap;gap:4px 22px;margin-top:2px}
 .ps .opts-p .c{font-weight:800;color:#0b5d2a;text-decoration:underline}
 .ps .quran-p{font-family:"Amiri","FreeSerif",serif;font-size:14pt}
-.ps table{width:100%;border-collapse:collapse;margin-top:4px}
+.ps table{width:calc(100% - 2px);border-collapse:collapse;margin-top:4px}
 .ps td{border:1px solid #cfd8d4;padding:3px 8px;vertical-align:top}
 .ps .fillb{font-weight:800;color:#0b5d2a;text-decoration:underline}
 .ps .mine{background:#f6f6f6;border-right:3px solid #888;padding:3px 8px;margin-top:4px;border-radius:4px}
@@ -232,9 +267,11 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;padding:20px 0 30px}
     <fieldset>
       <legend>المحتوى</legend>
       <label><input type="radio" name="pScope" value="exam" checked><span>⭐ أسئلة الامتحان المهمة فقط<small>الأسئلة العشرة المتوقعة</small></span></label>
-      <label><input type="radio" name="pScope" value="all"><span>📚 المذكرة كاملة<small>جميع الأقسام والأسئلة</small></span></label>
+      <label><input type="radio" name="pScope" value="all"><span>📚 جميع الأسئلة<small>جميع الأقسام والأسئلة</small></span></label>
+      <label><input type="radio" name="pScope" value="notes-teacher"><span>📝 مذكرة المعلم<small>مذكرة قسم التربية الإسلامية كاملة</small></span></label>
+      <label><input type="radio" name="pScope" value="notes-general"><span>📘 المذكرة العامة<small>ملخص منظّم لكل الدروس والأرقام المهمة</small></span></label>
     </fieldset>
-    <fieldset>
+    <fieldset id="modeBox">
       <legend>النوع</legend>
       <label><input type="radio" name="pMode" value="1" checked><span>✅ مع الحل<small>الأسئلة مع الإجابات النموذجية للمراجعة والحفظ</small></span></label>
       <label><input type="radio" name="pMode" value="0"><span>📝 بدون حل (ورقة فارغة)<small>الأسئلة فقط مع مساحات للكتابة كاختبار تجريبي</small></span></label>
@@ -437,6 +474,230 @@ const SECTIONS = [
 }
 ];
 
+/* ============ المذكرات ============ */
+// مذكرة المعلم — منقولة كما وردت في مذكرة قسم التربية الإسلامية
+const NOTES_TEACHER = `
+<div class="doc-cover">
+  <div>مملكة البحرين<br>وزارة التربية والتعليم<br>مدرسة الميثاق الوطني الإعدادية للبنين<br>قسم التربية الإسلامية</div>
+  <h2>مذكرة التربية الإسلامية</h2>
+  <div class="big">الثاني إعدادي — الاختبار رقم ١ — الفصل الأول</div>
+  <div>العام الدراسي 2026/2027م</div>
+  <div class="warn">تنبيه مهم: المذكرة لا تغني عن الكتاب</div>
+</div>
+
+<h2 class="doc-h">حديث فضل قراءة القرآن ومدارسته «دراسة وحفظ»</h2>
+<p><b>عن أبي هريرة رضي الله عنه قال: قال رسول الله صلى الله عليه وسلم:</b></p>
+<p class="doc-text">((...مَا اجْتَمَعَ قَوْمٌ فِي بَيْتٍ مِنْ بُيُوتِ اللَّهِ يَتْلُونَ كِتَابَ اللَّهِ وَيَتَدَارَسُونَهُ بَيْنَهُمْ إِلَّا نَزَلَتْ عَلَيْهِمُ السَّكِينَةُ، وَغَشِيَتْهُمُ الرَّحْمَةُ، وَحَفَّتْهُمُ الْمَلَائِكَةُ، وَذَكَرَهُمُ اللَّهُ فِيمَنْ عِنْدَهُ...))</p>
+<h3>س١: ما معنى الكلمات التالية؟</h3>
+<table><tr><th>يتلون كتاب الله</th><th>يتدارسونه بينهم</th><th>السكينة</th><th>غشيتهم الرحمة</th><th>حفتهم الملائكة</th></tr>
+<tr><td>يقرأون القرآن</td><td>يتعاهدونه حفظاً وفهماً</td><td>الطمأنينة والشعور بالرضا</td><td>شملتهم</td><td>أحاطت بهم تكريماً ورعاية لهم</td></tr></table>
+<h3>س٢: ما أفضل الأماكن لتلاوة القرآن الكريم؟ وهل تقتصر التلاوة على هذا المكان؟</h3>
+<ul><li>أفضل الأماكن لتلاوة القرآن الكريم: المساجد بيوت الله.</li><li>ولا تقتصر التلاوة على المساجد وإنما قد تكون في المدارس والمعاهد والبيوت ... إلخ.</li></ul>
+<h3>س٣: ما الجزاء الذي أعدّه الله تعالى لروّاد مجالس العلم والذكر؟</h3>
+<p>«نزول السكينة عليهم، ومنحهم الهدوء والطمأنينة، ومباركة الملائكة مجالسهم».</p>
+<h3>س٤: ضعْ علامة (✓) أمام العبارة الصحيحة، وعلامة (✗) أمام العبارة الخاطئة فيما يلي:</h3>
+<ol class="tf-list">
+<li>يتدارسونه بينهم: يتعهدونه حفظاً وفهماً ودراسة. <b>(✓)</b></li>
+<li>خير الأماكن لتعلم القرآن ومدارسته هي البيوت. <b>(✗)</b></li>
+<li>تنزل السكينة والطمأنينة فقط على من يقرأ القرآن في المسجد. <b>(✗)</b></li>
+<li>أعد الله ثواباً عظيماً وأجراً كبيراً لمن يتعلم القرآن ويتعاهده. <b>(✓)</b></li>
+<li>راوي الحديث الشريف هو أبو هريرة رضي الله عنه. <b>(✓)</b></li>
+</ol>
+<h3>س٥: استنتج فائدتين يرشد إليها الحديث الشريف:</h3>
+<ol><li>من واجب المسلمين أنْ يقبلوا على تلاوة القرآن الكريم ومدارسته.</li><li>مجالس القرآن وعلوم الدين من أفضل المجالس عند الله.</li></ol>
+
+<h2 class="doc-h">«التفكر والتأمل في مخلوقات الله»</h2>
+<h3>س١: بمَ ميّز الله الإنسان وفضّله على غيره من المخلوقات؟</h3>
+<p>ميّز الله تبارك وتعالى الإنسان على غيره من المخلوقات بالعقل والجسم والهيئة، قال تعالى: ﴿لَقَدْ خَلَقْنَا الْإِنسَانَ فِي أَحْسَنِ تَقْوِيمٍ﴾.</p>
+<h3>س٢: ما موقف الإسلام من الذين يعطلون عقولهم عن التفكير مع بيان وصفهم؟</h3>
+<p>الموقف هو: ذمّهم الله تبارك وتعالى بسبب تعطيلهم للعقول وعدم إعمالها في التفكير.<br>ووصفهم: وصفهم الله تبارك وتعالى بالأنعام الضالة.</p>
+<h3>الفوائد المستفادة منها هي:</h3>
+<ol class="alpha"><li>يأكل من لحومها ويشرب ألبانها.</li><li>يستخدمها في الركوب والعمل.</li><li>يصنع ملابسه من أوبارها وصوفها وشعرها.</li></ol>
+<h3>س٤: قال تعالى: ﴿وَفِي أَنفُسِكُمْ ۚ أَفَلَا تُبْصِرُونَ﴾ بيّن إعجاز الخالق عز وجل في النفس الإنسانية؟</h3>
+<p>ج٤: اليد تستخدم في العمل والكتابة والأكل والشرب / القدم للسير عليها / اللسان لتذوق الطعام والشراب.<br>العين لرؤية الأشياء من حولنا / الأذن لسمع الأصوات / الأنف لشم الروائح بمختلف أنواعها.</p>
+<h3>س٥: استنتج أثر التفكر والتأمل في الكون ومخلوقات الله تعالى على الإنسان؟</h3>
+<p>ج٥: يهدي الإنسان إلى الحق والصراط المستقيم / يعلم أن لله رباً / يزيد من قوة الإيمان / ترسيخ العقيدة الصحيحة في عقله وقلبه.</p>
+
+<h2 class="doc-h">سورة البقرة ١٦٣ - ١٦٤</h2>
+<p class="doc-text">قال تعالى: ﴿وَإِلَٰهُكُمْ إِلَٰهٌ وَاحِدٌ ۖ لَّا إِلَٰهَ إِلَّا هُوَ الرَّحْمَٰنُ الرَّحِيمُ (163) إِنَّ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ وَاخْتِلَافِ اللَّيْلِ وَالنَّهَارِ وَالْفُلْكِ الَّتِي تَجْرِي فِي الْبَحْرِ بِمَا يَنفَعُ النَّاسَ وَمَا أَنزَلَ اللَّهُ مِنَ السَّمَاءِ مِن مَّاءٍ فَأَحْيَا بِهِ الْأَرْضَ بَعْدَ مَوْتِهَا وَبَثَّ فِيهَا مِن كُلِّ دَابَّةٍ وَتَصْرِيفِ الرِّيَاحِ وَالسَّحَابِ الْمُسَخَّرِ بَيْنَ السَّمَاءِ وَالْأَرْضِ لَآيَاتٍ لِّقَوْمٍ يَعْقِلُونَ (164)﴾</p>
+<h3>س١: ما معنى الكلمات التالية؟</h3>
+<table><tr><th>وإلهكم</th><th>اختلاف الليل والنهار</th><th>لآيات</th><th>الفلك</th></tr>
+<tr><td>معبودكم</td><td>تعاقبهما</td><td>علامات واضحات</td><td>السفن</td></tr></table>
+<h3>س٢: من هو الإله الذي يستحق العبادة؟</h3>
+<p>هو الله وحده الذي تجب له الطاعة المطلقة.</p>
+<h3>س٣: لماذا ختم الله الآية 163 بقوله: «هو الرحمن الرحيم»؟</h3>
+<p>ترويحاً للقلوب وإشعاراً بأنّ رحمة الله سبقت غضبه، وأنّ لخلقه منه كل الرحمة والإحسان.</p>
+<h3>س٤: اذكر بعض المخلوقات التي دعا الله أصحاب العقول للتفكر فيها في الآية 164؟</h3>
+<table><tr><td>السماوات والأرض</td><td>تعاقب الليل والنهار</td><td>السفن التي تجري في البحر</td></tr>
+<tr><td>نزول المطر وإحياء الأرض</td><td>تصريف الرياح</td><td>تصريف السحاب</td></tr></table>
+<h3>س٥: استنتج فائدتين ترشد إليها الآيات الكريمة.</h3>
+<ol class="alpha"><li>وجوب الإقرار بوحدانية الله تعالى.</li><li>البحث والتأمل في مظاهر الكون من سبل الإيمان بالله تعالى.</li></ol>
+
+<h2 class="doc-h">«صلاة الجنازة»</h2>
+<h3>س١: ما حُكم صلاة الجنازة؟</h3>
+<p>فرض كفاية: إذا صلّى عليه جماعة رُفع الإثم عن الآخرين، ويؤثموا إذا لم يصلّوا عليه.</p>
+<h3>س٢: ما الحكمة من مشروعية صلاة الجنازة؟</h3>
+<ul><li>فرصة لتوديع الميت والدعاء له بالرحمة والمغفرة.</li><li>مشاركة أهل الميت مصابهم وحثّهم على الصبر.</li><li>أخذ العبرة وتذكر مصيرهم مما يدفعهم للعمل لما بعد الموت.</li></ul>
+<h3>س٣: كيف تؤدّى صلاة الجنازة؟</h3>
+<p>١- توضع الجنازة جهة القبلة ويقف المصلون صفوفاً مستوية خلف الإمام.<br>٢- يكبر الإمام أربع تكبيرات ويرفع يده، ويضع اليد اليمنى على اليسرى.</p>
+<ul><li>التكبيرة الأولى: قراءة الفاتحة.</li><li>التكبيرة الثانية: الصلاة على النبي ﷺ والصلاة الإبراهيمية.</li><li>التكبيرة الثالثة: الدعاء للميت بالرحمة والمغفرة.</li><li>التكبيرة الرابعة: الدعاء «اللهم لا تحرمنا أجره ولا تفتنا بعده واغفر لنا وله».</li></ul>
+<p>٣- التسليم عن اليمين والشمال.</p>
+<h3>س٤: ضعْ علامة (✓) أمام العبارة الصحيحة، وعلامة (✗) أمام العبارة الخاطئة فيما يلي:</h3>
+<ol class="tf-list">
+<li>عدد تكبيرات صلاة الجنازة أربع تكبيرات. <b>(✓)</b></li>
+<li>يضع المصلي في صلاة الجنازة يده اليسرى على اليد اليمنى. <b>(✗)</b></li>
+<li>يقرأ المصلي في التكبيرة الثانية سورة الفاتحة. <b>(✗)</b></li>
+<li>حُكم صلاة الجنازة فرض كفاية على المسلمين. <b>(✓)</b></li>
+<li>شرعت صلاة الجنازة لتكون فرصة يودع فيها المسلمون الميت. <b>(✓)</b></li>
+</ol>
+
+<h2 class="doc-h">«فتح مكة 8 هـ»</h2>
+<h3>س١: متى حدث فتح مكة؟</h3>
+<p>حدثت في رمضان سنة 8 هـ.</p>
+<h3>س٢: ما سبب نقض قريش لصلح الحديبية؟ أو ما سبب فتح مكة؟</h3>
+<p>قيام قريش بمساعدة قبيلة بكر حليفتها بالاعتداء على قبيلة خزاعة حليفة المسلمين.</p>
+<h3>س٣: هل أعلم النبي ﷺ المسلمين بوجهته؟ وكم كان عدد من خرج معه؟</h3>
+<p>لم يعلمهم بوجهته حتى لا تعلم قريش بمسيره فتستعد له، وكان عدد من خرج معه ١٠٠٠٠ مسلم.</p>
+<h3>س٤: كم عدد الفرق التي شكلها النبي لدخول مكة؟</h3>
+<table><tr><td>1- فرقة بقيادة الرسول ﷺ</td><td>2- فرقة بقيادة خالد بن الوليد</td><td>3- فرقة بقيادة الزبير بن العوام</td><td>4- فرقة بقيادة سعد بن عبادة</td><td>5- فرقة بقيادة أبو عبيدة بن الجراح</td></tr></table>
+<h3>س٥: اذكر ثلاثة أعمال قام بها النبي ﷺ بعد فتح مكة.</h3>
+<table><tr><td>الطواف حول الكعبة وتحطيم الأصنام</td><td>العفو عن أهل قريش</td><td>أمر بلال بن رباح بالأذان فوق الكعبة</td></tr></table>
+<h3>س٦: من القائل والمناسبة «يا معشر قريش لقد جاءكم محمد بما لا قبل لكم به»؟</h3>
+<p>القائل: أبو سفيان بن حرب، والمناسبة: عندما أسره المسلمون ومرّ الجيش من أمامه وأكرمه الرسول ﷺ بقوله: من دخل دار أبي سفيان فهو آمن...</p>
+<h3>س٧: ضعْ علامة (✓) أمام العبارة الصحيحة، وعلامة (✗) أمام العبارة الخاطئة فيما يلي:</h3>
+<ol class="alpha tf-list">
+<li>دخل المسلمون مكة فاتحين في 20 رمضان سنة 8 هـ. <b>(✓)</b></li>
+<li>قسم النبي ﷺ الجيش إلى ثلاث فرق. <b>(✗)</b></li>
+<li>دلالة قول النبي ﷺ لقريش «اذهبوا فأنتم الطلقاء» العفو والتسامح. <b>(✓)</b></li>
+<li>عدد المسلمين الذين خرجوا لفتح مكة ١٠٠٠٠. <b>(✓)</b></li>
+<li>أخفى النبي ﷺ وجهته على الصحابة حتى لا تعلم قريش بمسيره فتستعد لذلك. <b>(✓)</b></li>
+<li>طاف النبي ﷺ حول الكعبة سبعة أشواط. <b>(✓)</b></li>
+</ol>
+<p class="doc-end">مع تمنياتنا لكم بالنجاح</p>
+`;
+
+// المذكرة العامة — ملخص منظم لكل الدروس
+const NOTES_GENERAL = `
+<div class="doc-cover">
+  <h2>المذكرة العامة — التربية الإسلامية</h2>
+  <div class="big">الصف الثاني الإعدادي — ملخص الاختبار الأول</div>
+  <div>ملخص منظّم لجميع الدروس: النصوص، المعاني، الأفكار الرئيسية، والأرقام المهمة</div>
+</div>
+
+<h2 class="doc-h">⚡ أرقام وتواريخ مهمة (للحفظ السريع)</h2>
+<table>
+<tr><th>المعلومة</th><th>الإجابة</th></tr>
+<tr><td>تاريخ فتح مكة</td><td>صبيحة يوم الجمعة 20 رمضان سنة 8 هـ</td></tr>
+<tr><td>عدد المسلمين في فتح مكة</td><td>10,000 مسلم</td></tr>
+<tr><td>عدد فرق الجيش يوم الفتح</td><td>5 فرق</td></tr>
+<tr><td>أشواط طواف النبي ﷺ حول الكعبة</td><td>7 أشواط</td></tr>
+<tr><td>عدد تكبيرات صلاة الجنازة</td><td>4 تكبيرات</td></tr>
+<tr><td>حكم صلاة الجنازة</td><td>فرض كفاية</td></tr>
+<tr><td>آيات الدرس</td><td>سورة البقرة 163 - 164</td></tr>
+<tr><td>راوي حديث فضل قراءة القرآن</td><td>أبو هريرة رضي الله عنه</td></tr>
+</table>
+
+<h2 class="doc-h">📗 الدرس الأول: سورة البقرة (163 - 164)</h2>
+<p class="doc-text">﴿وَإِلَٰهُكُمْ إِلَٰهٌ وَاحِدٌ ۖ لَّا إِلَٰهَ إِلَّا هُوَ الرَّحْمَٰنُ الرَّحِيمُ (163) إِنَّ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ وَاخْتِلَافِ اللَّيْلِ وَالنَّهَارِ وَالْفُلْكِ الَّتِي تَجْرِي فِي الْبَحْرِ بِمَا يَنفَعُ النَّاسَ وَمَا أَنزَلَ اللَّهُ مِنَ السَّمَاءِ مِن مَّاءٍ فَأَحْيَا بِهِ الْأَرْضَ بَعْدَ مَوْتِهَا وَبَثَّ فِيهَا مِن كُلِّ دَابَّةٍ وَتَصْرِيفِ الرِّيَاحِ وَالسَّحَابِ الْمُسَخَّرِ بَيْنَ السَّمَاءِ وَالْأَرْضِ لَآيَاتٍ لِّقَوْمٍ يَعْقِلُونَ (164)﴾</p>
+<h3>ترتيب الآيات في ثلاثة مقاطع</h3>
+<ol><li>﴿وَإِلَٰهُكُمْ إِلَٰهٌ وَاحِدٌ ... الرَّحْمَٰنُ الرَّحِيمُ﴾</li><li>﴿إِنَّ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ ... بِمَا يَنفَعُ النَّاسَ﴾</li><li>﴿وَمَا أَنزَلَ اللَّهُ مِنَ السَّمَاءِ مِن مَّاءٍ ... لَآيَاتٍ لِّقَوْمٍ يَعْقِلُونَ﴾</li></ol>
+<h3>معاني الكلمات <span class="tag">⚠ تأتي كلمتان منها في الامتحان</span></h3>
+<table><tr><th>الكلمة</th><th>المعنى</th></tr>
+<tr><td>وإلهكم</td><td>معبودكم</td></tr><tr><td>اختلاف الليل والنهار</td><td>تعاقبهما</td></tr>
+<tr><td>الفلك</td><td>السفن التي تجري في البحر</td></tr><tr><td>لآيات</td><td>علامات واضحات</td></tr></table>
+<h3>الأفكار الرئيسية</h3>
+<ul>
+<li>الإله الذي يستحق العبادة هو الله وحده الذي تجب له الطاعة المطلقة.</li>
+<li>خُتمت الآية 163 بـ«الرحمن الرحيم» ترويحاً للقلوب، وإشعاراً بأن رحمة الله سبقت غضبه، وأن لخلقه منه كل الرحمة والإحسان.</li>
+<li>مخلوقات دعا الله للتفكر فيها: السماوات والأرض — تعاقب الليل والنهار — السفن في البحر — نزول المطر وإحياء الأرض — تصريف الرياح — تصريف السحاب.</li>
+</ul>
+<h3>الفوائد</h3>
+<ol class="alpha"><li>وجوب الإقرار بوحدانية الله تعالى.</li><li>البحث والتأمل في مظاهر الكون من سبل الإيمان بالله تعالى.</li></ol>
+
+<h2 class="doc-h">📜 الدرس الثاني: حديث فضل قراءة القرآن ومدارسته (دراسة وحفظ)</h2>
+<p class="doc-text">عن أبي هريرة رضي الله عنه قال: قال رسول الله ﷺ: ((مَا اجْتَمَعَ قَوْمٌ فِي بَيْتٍ مِنْ بُيُوتِ اللَّهِ يَتْلُونَ كِتَابَ اللَّهِ وَيَتَدَارَسُونَهُ بَيْنَهُمْ إِلَّا نَزَلَتْ عَلَيْهِمُ <u>السَّكِينَةُ</u>، وَغَشِيَتْهُمُ <u>الرَّحْمَةُ</u>، وَحَفَّتْهُمُ <u>الْمَلَائِكَةُ</u>، وَذَكَرَهُمُ اللَّهُ فِيمَنْ عِنْدَهُ))</p>
+<p class="tip">💡 لحفظ ترتيب الفراغات: <b>السكينة ← الرحمة ← الملائكة</b> (نزلت — غشيت — حفّت).</p>
+<h3>معاني الكلمات</h3>
+<table><tr><th>الكلمة</th><th>المعنى</th></tr>
+<tr><td>يتلون كتاب الله</td><td>يقرؤون القرآن</td></tr><tr><td>يتدارسونه بينهم</td><td>يتعاهدونه حفظاً وفهماً</td></tr>
+<tr><td>السكينة</td><td>الطمأنينة والشعور بالرضا</td></tr><tr><td>غشيتهم الرحمة</td><td>شملتهم وغمرتهم رحمة الله</td></tr>
+<tr><td>حفتهم الملائكة</td><td>أحاطت بهم تكريماً ورعاية لهم</td></tr></table>
+<h3>الأفكار الرئيسية</h3>
+<ul>
+<li>أفضل أماكن تلاوة القرآن: المساجد (بيوت الله)، ولا تقتصر عليها؛ فتكون في المدارس والمعاهد والبيوت.</li>
+<li>جزاء روّاد مجالس العلم والذكر: نزول السكينة، والهدوء والطمأنينة، ومباركة الملائكة لمجالسهم، وذكر الله لهم فيمن عنده.</li>
+<li>أعدّ الله ثواباً عظيماً وأجراً كبيراً لمن يتعلم القرآن ويتعاهده.</li>
+</ul>
+<h3>الفوائد</h3>
+<ol><li>من واجب المسلمين أن يُقبلوا على تلاوة القرآن الكريم ومدارسته.</li><li>مجالس القرآن وعلوم الدين من أفضل المجالس عند الله.</li></ol>
+<h3>انتبه للعبارات الخاطئة</h3>
+<ul class="x-list"><li>«خير الأماكن لتعلم القرآن هي البيوت فقط» ✗ ← الأفضل المساجد وتصح في غيرها.</li><li>«تنزل السكينة فقط على من يقرأ في المسجد» ✗</li></ul>
+
+<h2 class="doc-h">🌿 الدرس الثالث: التفكر والتأمل في مخلوقات الله</h2>
+<ul>
+<li><b>تمييز الإنسان:</b> ميّزه الله وفضّله بالعقل والجسم والهيئة، قال تعالى: ﴿لَقَدْ خَلَقْنَا الْإِنسَانَ فِي أَحْسَنِ تَقْوِيمٍ﴾.</li>
+<li><b>موقف الإسلام ممن يعطلون عقولهم:</b> ذمّهم الله لتعطيلهم عقولهم وعدم إعمالها في التفكير.</li>
+<li><b>وصفهم:</b> وصفهم الله بـ<b>الأنعام الضالة</b> (وليس بالجمال ✗).</li>
+</ul>
+<h3>فوائد الأنعام</h3>
+<ol class="alpha"><li>يأكل من لحومها ويشرب ألبانها.</li><li>يستخدمها في الركوب والعمل.</li><li>يصنع ملابسه من أوبارها وصوفها وشعرها.</li></ol>
+<h3>إعجاز الخالق في النفس الإنسانية ﴿وَفِي أَنفُسِكُمْ ۚ أَفَلَا تُبْصِرُونَ﴾</h3>
+<table><tr><th>العضو</th><th>فائدته</th></tr>
+<tr><td>اليد</td><td>العمل والكتابة والأكل والشرب</td></tr><tr><td>القدم</td><td>السير عليها</td></tr>
+<tr><td>اللسان</td><td>تذوق الطعام والشراب، والتكلم</td></tr><tr><td>العين</td><td>رؤية الأشياء من حولنا</td></tr>
+<tr><td>الأذن</td><td>سماع الأصوات</td></tr><tr><td>الأنف</td><td>شم الروائح بمختلف أنواعها</td></tr></table>
+<h3>أثر التفكر والتأمل في الكون على الإنسان</h3>
+<ul><li>يهديه إلى الحق والصراط المستقيم.</li><li>يعلم أن لله رباً.</li><li>يزيد من قوة الإيمان.</li><li>يرسّخ العقيدة الصحيحة في عقله وقلبه.</li></ul>
+
+<h2 class="doc-h">🕌 الدرس الرابع: صلاة الجنازة</h2>
+<ul>
+<li><b>حكمها:</b> فرض كفاية؛ إذا صلّى عليه جماعة رُفع الإثم عن الآخرين، ويأثمون إذا لم يصلّ عليه أحد.</li>
+<li><b>الحكمة من مشروعيتها:</b> توديع الميت والدعاء له بالرحمة والمغفرة — مشاركة أهله مصابهم وحثّهم على الصبر — أخذ العبرة وتذكر المصير مما يدفع للعمل لما بعد الموت.</li>
+</ul>
+<h3>كيفية أدائها</h3>
+<ol>
+<li>توضع الجنازة جهة القبلة، ويقف المصلون صفوفاً مستوية خلف الإمام.</li>
+<li>يكبّر أربع تكبيرات ويرفع يده، ويضع اليد <b>اليمنى على اليسرى</b>.</li>
+<li>التسليم عن اليمين والشمال.</li>
+</ol>
+<table><tr><th>التكبيرة</th><th>ما يُقال فيها</th></tr>
+<tr><td>الأولى</td><td>قراءة سورة الفاتحة</td></tr>
+<tr><td>الثانية</td><td>الصلاة على النبي ﷺ (الصلاة الإبراهيمية)</td></tr>
+<tr><td>الثالثة</td><td>الدعاء للميت بالرحمة والمغفرة</td></tr>
+<tr><td>الرابعة</td><td>الدعاء للجميع: «اللهم لا تحرمنا أجره ولا تفتنا بعده واغفر لنا وله»</td></tr></table>
+<ul class="x-list"><li>«يضع اليسرى على اليمنى» ✗ ← اليمنى على اليسرى.</li><li>«الفاتحة في التكبيرة الثانية» ✗ ← في التكبيرة الأولى.</li></ul>
+
+<h2 class="doc-h">🏴 الدرس الخامس: فتح مكة (8 هـ)</h2>
+<ul>
+<li><b>التاريخ:</b> صبيحة يوم الجمعة 20 رمضان سنة 8 هـ.</li>
+<li><b>السبب:</b> نقض قريش صلح الحديبية؛ إذ ساعدت قبيلة بكر (حليفتها) في الاعتداء على قبيلة خزاعة (حليفة المسلمين).</li>
+<li><b>السرية:</b> أخفى النبي ﷺ وجهته عن الصحابة حتى لا تعلم قريش بمسيره فتستعد له.</li>
+<li><b>عدد الجيش:</b> 10,000 مسلم.</li>
+</ul>
+<h3>فرق الجيش الخمس وقادتها</h3>
+<ol><li>فرقة بقيادة الرسول ﷺ.</li><li>فرقة بقيادة خالد بن الوليد.</li><li>فرقة بقيادة الزبير بن العوام.</li><li>فرقة بقيادة سعد بن عبادة.</li><li>فرقة بقيادة أبي عبيدة بن الجراح.</li></ol>
+<h3>أبو سفيان بن حرب</h3>
+<p>قال: «يا معشر قريش لقد جاءكم محمد بما لا قِبَل لكم به» — عندما أسره المسلمون ومرّ الجيش من أمامه، فأكرمه الرسول ﷺ بقوله: «من دخل دار أبي سفيان فهو آمن».</p>
+<h3>أعمال النبي ﷺ بعد الفتح</h3>
+<ol><li>الطواف حول الكعبة (سبعة أشواط) وتحطيم الأصنام.</li><li>العفو عن أهل قريش بقوله: «اذهبوا فأنتم الطلقاء» — ودلالته العفو والتسامح.</li><li>أمر بلال بن رباح بالأذان فوق الكعبة.</li></ol>
+
+<h2 class="doc-h">⭐ أسئلة الامتحان المتوقعة (راجعها جيداً)</h2>
+<ol>
+<li>استنتج فائدة واحدة من آيات البقرة (163 - 164).</li>
+<li>ترتيب آيات سورة البقرة المقسمة إلى 3 مقاطع.</li>
+<li>أكمل الحديث: السكينة — الرحمة — الملائكة.</li>
+<li>بمَ ميّز الله الإنسان؟ بالعقل والجسم والهيئة.</li>
+<li>ترتيب تكبيرات صلاة الجنازة.</li>
+<li>متى حدث فتح مكة؟ 20 رمضان 8 هـ.</li>
+<li>أحد أعمال النبي ﷺ بعد الفتح.</li>
+<li>عدد المسلمين في الفتح: 10,000.</li>
+<li>«وصف الإسلام الذين يعطلون عقولهم بالجمال» ✗ ← بالأنعام الضالة.</li>
+<li>فائدة اللسان: تذوق الطعام والشراب (والتكلم).</li>
+<li>كلمتان من معاني كلمات سورة البقرة.</li>
+</ol>
+<p class="doc-end">بالتوفيق والنجاح 🌙</p>
+`;
+
 /* ============ الحالة والحفظ التلقائي (localStorage) ============ */
 const KEY = "islamic-review-g8-v3";      // الإجابات: { [qid]: {done, correct, ans} أو {draft} }
 const UI_KEY = KEY + "-ui";              // آخر تبويب وآخر سؤال وإعدادات الطباعة
@@ -498,7 +759,7 @@ function toast(msg){
 }
 
 /* ============ واجهة ============ */
-let current = SECTIONS.some(s => s.id === ui.tab) || ui.tab === "summary" ? ui.tab : "exam";
+let current = SECTIONS.some(s => s.id === ui.tab) || ["summary","notes"].includes(ui.tab) ? ui.tab : "exam";
 const tabsEl = document.getElementById("tabs");
 const app = document.getElementById("app");
 
@@ -506,7 +767,7 @@ function goTab(id){ current = id; ui.tab = id; saveUI(); render(); window.scroll
 
 function renderTabs(){
   tabsEl.innerHTML = "";
-  [...SECTIONS, {id:"summary", title:"النتيجة", icon:"🏆"}].forEach(s => {
+  [SECTIONS[0], {id:"notes", title:"المذكرة", icon:"📖"}, ...SECTIONS.slice(1), {id:"summary", title:"النتيجة", icon:"🏆"}].forEach(s => {
     const b = el("button",{class:"tab"+(s.id===current?" active":"")});
     let pct = "";
     if (s.parts){ const qs=allQs(s); const d=qs.filter(q=>state[q.id]?.done).length; pct=`<span class="pct">${d}/${qs.length}</span>`; }
@@ -529,6 +790,7 @@ function updateScores(){
 function render(){
   app.innerHTML = "";
   if (current === "summary") { renderSummary(); renderTabs(); return; }
+  if (current === "notes") { renderNotes(); renderTabs(); return; }
   const s = SECTIONS.find(x=>x.id===current);
   const head = el("div",{class:"section-head"});
   head.innerHTML = `<h2>${s.icon} ${s.full}</h2>`;
@@ -777,6 +1039,29 @@ function buildOrder(q, body, mark, show, st){
   if (st.done) check(true);
 }
 
+/* المذكرة: مذكرة المعلم + المذكرة العامة */
+function renderNotes(){
+  const view = ui.notesView === "general" ? "general" : "teacher";
+  const head = el("div",{class:"section-head"});
+  head.innerHTML = `<h2>📖 المذكرة</h2>`;
+  app.appendChild(head);
+  const sw = el("div",{class:"seg"});
+  [["teacher","📝 مذكرة المعلم"],["general","📘 المذكرة العامة"]].forEach(([v,t]) => {
+    const b = el("button",{class:"seg-btn"+(v===view?" active":"")}, t);
+    b.onclick = () => { ui.notesView = v; saveUI(); render(); };
+    sw.appendChild(b);
+  });
+  app.appendChild(sw);
+  app.appendChild(el("p",{class:"hint"}, view === "teacher"
+    ? `مذكرة قسم التربية الإسلامية كاملة كما وزّعها المعلم. <a href="pdf/مذكرة-المعلم-الأصلية.pdf" target="_blank" rel="noopener">📄 فتح المذكرة الأصلية (PDF)</a>`
+    : "ملخص منظّم لكل الدروس يجمع المذكرة وأسئلة المراجعة والأرقام المهمة."));
+  app.appendChild(el("div",{class:"doc"}, view === "teacher" ? NOTES_TEACHER : NOTES_GENERAL));
+  const cta = el("div",{class:"print-cta"});
+  const b = el("button",{class:"btn"}, `🖨 طباعة / حفظ ${view==="teacher"?"مذكرة المعلم":"المذكرة العامة"} PDF`);
+  b.onclick = () => printNow("notes-" + view, "1");
+  cta.appendChild(b); app.appendChild(cta);
+}
+
 /* النتيجة */
 function renderSummary(){
   const box = el("div",{class:"summary"});
@@ -889,6 +1174,10 @@ function printMine(q, n){
 }
 
 function buildPrint(scope, mode){
+  if (scope.startsWith("notes")){
+    document.getElementById("printSheet").innerHTML = `<div class="ps"><div class="doc">${scope === "notes-teacher" ? NOTES_TEACHER : NOTES_GENERAL}</div></div>`;
+    return;
+  }
   const A = mode === "1", mine = mode === "mine";
   const secs = scope === "exam" ? SECTIONS.filter(s=>s.id==="exam") : SECTIONS.filter(s=>mine || s.id!=="exam");
   const qs = secs.flatMap(allQs);
@@ -917,6 +1206,7 @@ function openPrint(){
   const md = document.querySelector(`input[name=pMode][value="${pr.mode}"]`); if (md) md.checked = true;
   const d = SECTIONS.flatMap(allQs).filter(q=>state[q.id]?.done).length;
   document.getElementById("mineCount").textContent = d ? `(${d} إجابة محفوظة)` : "(لا توجد إجابات محفوظة بعد)";
+  syncModeBox();
   modal.classList.add("show");
 }
 function printCta(){
@@ -927,15 +1217,25 @@ function printCta(){
 document.getElementById("printBtn").onclick = openPrint;
 document.getElementById("closePrint").onclick = () => modal.classList.remove("show");
 modal.onclick = e => { if (e.target === modal) modal.classList.remove("show"); };
-document.getElementById("doPrint").onclick = () => {
-  const scope = document.querySelector("input[name=pScope]:checked").value;
-  const mode = document.querySelector("input[name=pMode]:checked").value;
-  ui.print = {scope, mode}; saveUI();
+function printNow(scope, mode){
   save(); // التأكد من حفظ كل الإجابات قبل الطباعة
   buildPrint(scope, mode);
   modal.classList.remove("show");
   setTimeout(() => window.print(), 150);
+}
+document.getElementById("doPrint").onclick = () => {
+  const scope = document.querySelector("input[name=pScope]:checked").value;
+  const mode = document.querySelector("input[name=pMode]:checked").value;
+  ui.print = {scope, mode}; saveUI();
+  printNow(scope, mode);
 };
+// خيار «النوع» لا ينطبق على المذكرات
+function syncModeBox(){
+  const notes = document.querySelector("input[name=pScope]:checked").value.startsWith("notes");
+  document.getElementById("modeBox").disabled = notes;
+  document.getElementById("modeBox").style.opacity = notes ? .45 : 1;
+}
+document.querySelectorAll("input[name=pScope]").forEach(r => r.onchange = syncModeBox);
 
 /* ============ إعادة الضبط ============ */
 function resetAll(){
