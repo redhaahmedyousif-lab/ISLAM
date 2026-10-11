@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مراجعة التربية الإسلامية</title>
+<meta name="description" content="مراجعة تفاعلية لمادة التربية الإسلامية للصف الثاني الإعدادي - الاختبار الأول">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f7f5; --card:#ffffff; --text:#1d2b26; --muted:#5f6f69; --border:#dbe5e0;
+  --primary:#0f766e; --primary-2:#115e59; --primary-soft:#e0f2ef;
+  --gold:#b7892c; --gold-soft:#fbf3e2;
+  --ok:#15803d; --ok-soft:#dcfce7; --bad:#b91c1c; --bad-soft:#fee2e2;
+  --shadow:0 4px 18px rgba(15,60,50,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1715; --card:#16211e; --text:#e6efec; --muted:#9fb2ab; --border:#27362f;
+    --primary:#2dd4bf; --primary-2:#5eead4; --primary-soft:#123430;
+    --gold:#e0b45a; --gold-soft:#2b2414;
+    --ok:#4ade80; --ok-soft:#10301d; --bad:#f87171; --bad-soft:#3a1717;
+    --shadow:0 4px 18px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1715; --card:#16211e; --text:#e6efec; --muted:#9fb2ab; --border:#27362f;
+  --primary:#2dd4bf; --primary-2:#5eead4; --primary-soft:#123430;
+  --gold:#e0b45a; --gold-soft:#2b2414;
+  --ok:#4ade80; --ok-soft:#10301d; --bad:#f87171; --bad-soft:#3a1717;
+  --shadow:0 4px 18px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:"Tajawal",system-ui,sans-serif;font-size:17px;line-height:1.75}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+
+/* Header */
+header{background:linear-gradient(135deg,#0f766e,#134e4a);color:#fff;padding:28px 0 22px}
+header h1{margin:0;font-size:1.65rem;font-weight:800}
+header p{margin:4px 0 0;opacity:.9}
+.top-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.score-box{background:rgba(255,255,255,.14);border-radius:14px;padding:8px 16px;text-align:center;min-width:130px}
+.score-box b{font-size:1.5rem;display:block;line-height:1.2}
+.score-box small{opacity:.9}
+.hdr-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.hdr-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:999px;padding:5px 14px;cursor:pointer}
+.hdr-btn:hover{background:rgba(255,255,255,.25)}
+
+/* Tabs */
+nav.tabs{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--border);box-shadow:var(--shadow)}
+nav.tabs .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:10px;padding-bottom:10px;scrollbar-width:thin}
+.tab{flex:0 0 auto;border:1px solid var(--border);background:transparent;border-radius:999px;padding:6px 14px;cursor:pointer;white-space:nowrap;color:var(--muted);font-weight:500}
+.tab .pct{font-size:.78rem;opacity:.8;margin-inline-start:4px}
+.tab.active{background:var(--primary);border-color:var(--primary);color:#fff}
+:root[data-theme="dark"] .tab.active{color:#06201c}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tab.active{color:#06201c}}
+
+main{padding:22px 0 60px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.section-head h2{margin:0;font-size:1.4rem;color:var(--primary)}
+.progress{height:8px;background:var(--border);border-radius:999px;overflow:hidden;margin:8px 0 18px}
+.progress>i{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--gold));width:0;transition:width .4s}
+.part-title{font-weight:800;font-size:1.1rem;margin:26px 0 10px;padding-inline-start:10px;border-inline-start:4px solid var(--gold)}
+
+.ref{background:var(--gold-soft);border:1px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:10px}
+.ref .lbl{font-weight:700;color:var(--gold);font-size:.95rem}
+.quran{font-family:"Amiri",serif;font-size:1.45rem;line-height:2.2;text-align:center;margin:6px 0 0}
+
+/* Cards */
+.q{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow)}
+.q.correct{border-color:var(--ok)}
+.q.wrong{border-color:var(--bad)}
+.q-head{display:flex;gap:10px;align-items:flex-start}
+.num{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;font-weight:800;font-size:.9rem;margin-top:2px}
+.q-text{font-weight:700;flex:1}
+.badge{flex:0 0 auto;font-size:.75rem;background:var(--primary-soft);color:var(--primary);border-radius:999px;padding:2px 10px;margin-top:4px}
+.q-body{margin-top:12px}
+
+.opts{display:grid;gap:8px}
+.opt{text-align:start;border:1.5px solid var(--border);background:transparent;border-radius:12px;padding:10px 14px;cursor:pointer;transition:.15s}
+.opt:hover:not(:disabled){border-color:var(--primary);background:var(--primary-soft)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft);color:var(--ok);font-weight:700}
+.opt.no{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.opt:disabled{cursor:default}
+
+.tf{display:flex;gap:10px}
+.tf .opt{flex:1;text-align:center;font-size:1.3rem;font-weight:800}
+
+textarea,input.blank{width:100%;border:1.5px solid var(--border);background:var(--bg);border-radius:12px;padding:10px 12px;resize:vertical}
+textarea:focus,input.blank:focus,select:focus{outline:none;border-color:var(--primary)}
+input.blank{width:auto;min-width:120px;max-width:170px;display:inline-block;padding:2px 10px;margin:0 4px;text-align:center}
+input.blank.ok{border-color:var(--ok);background:var(--ok-soft)}
+input.blank.no{border-color:var(--bad);background:var(--bad-soft)}
+.hadith{font-family:"Amiri",serif;font-size:1.25rem;line-height:2.4}
+
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.btn{border:none;background:var(--primary);color:#fff;border-radius:10px;padding:8px 18px;cursor:pointer;font-weight:700}
+:root[data-theme="dark"] .btn{color:#06201c}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn{color:#06201c}}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--primary);border:1.5px solid var(--primary)}
+.btn.okb{background:var(--ok)}
+.btn.badb{background:var(--bad)}
+.btn:disabled{opacity:.5;cursor:default}
+
+.match{display:grid;gap:8px}
+.match-row{display:grid;grid-template-columns:1fr 1.3fr;gap:10px;align-items:center;border:1px solid var(--border);border-radius:12px;padding:8px 12px}
+.match-row b{font-weight:700}
+.match-row select{width:100%;border:1.5px solid var(--border);background:var(--bg);border-radius:10px;padding:6px 8px}
+.match-row.ok{border-color:var(--ok);background:var(--ok-soft)}
+.match-row.no{border-color:var(--bad);background:var(--bad-soft)}
+.match-row .fix{grid-column:1/-1;font-size:.9rem;color:var(--ok)}
+@media (max-width:560px){.match-row{grid-template-columns:1fr}}
+
+.order{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.order li{display:flex;align-items:center;gap:10px;border:1.5px solid var(--border);border-radius:12px;padding:8px 10px;background:var(--card);cursor:grab}
+.order li.dragging{opacity:.5}
+.order li.ok{border-color:var(--ok);background:var(--ok-soft)}
+.order li.no{border-color:var(--bad);background:var(--bad-soft)}
+.order .pos{flex:0 0 auto;background:var(--gold-soft);color:var(--gold);border-radius:8px;padding:0 8px;font-weight:800;font-size:.85rem;white-space:nowrap}
+.order .txt{flex:1}
+.order .mv{display:flex;flex-direction:column;gap:2px}
+.order .mv button{border:1px solid var(--border);background:transparent;border-radius:6px;width:30px;height:22px;line-height:1;cursor:pointer;color:var(--muted)}
+
+.feedback{margin-top:12px;border-radius:12px;padding:10px 14px;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:var(--ok-soft);color:var(--ok)}
+.feedback.no{background:var(--bad-soft);color:var(--bad)}
+.feedback.info{background:var(--primary-soft);color:var(--text)}
+.feedback .model{color:var(--text);margin-top:6px}
+.feedback .model b{color:var(--primary)}
+.kw{display:inline-block;border-radius:999px;padding:0 10px;margin:2px;font-size:.85rem;border:1px solid currentColor}
+.kw.hit{color:var(--ok)} .kw.miss{color:var(--muted)}
+.self{margin-top:8px;color:var(--text)}
+
+.summary{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
+.summary table{width:100%;border-collapse:collapse}
+.summary td,.summary th{padding:8px;border-bottom:1px solid var(--border);text-align:start}
+.big-score{font-size:2.6rem;font-weight:800;color:var(--primary);text-align:center;margin:6px 0}
+.center{text-align:center}
+footer{text-align:center;color:var(--muted);font-size:.9rem;padding:20px 0 30px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top-row">
+      <div>
+        <h1>📖 مراجعة التربية الإسلامية</h1>
+        <p>الصف الثاني الإعدادي — مراجعة الاختبار الأول</p>
+      </div>
+      <div class="score-box"><b id="gScore">0 / 0</b><small>إجاباتك الصحيحة</small></div>
+    </div>
+    <div class="hdr-actions">
+      <button class="hdr-btn" id="themeBtn">🌓 الوضع الليلي</button>
+      <button class="hdr-btn" id="resetBtn">↺ إعادة الكل</button>
+    </div>
+  </div>
+</header>
+<nav class="tabs"><div class="wrap" id="tabs"></div></nav>
+<main><div class="wrap" id="app"></div></main>
+<footer>بالتوفيق والنجاح 🌙 — اجتهد وراجع جيداً</footer>
+
+<script>
+/* ============ البيانات ============ */
+const SECTIONS = [
+{
+  id:"quran", title:"القرآن الكريم", icon:"📗", full:"سورة البقرة (163 - 164)",
+  ref:{label:"قال تعالى:", quran:true, text:"﴿وَإِلَٰهُكُمْ إِلَٰهٌ وَاحِدٌ ۖ لَّا إِلَٰهَ إِلَّا هُوَ الرَّحْمَٰنُ الرَّحِيمُ ۝ إِنَّ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ وَاخْتِلَافِ اللَّيْلِ وَالنَّهَارِ وَالْفُلْكِ الَّتِي تَجْرِي فِي الْبَحْرِ بِمَا يَنفَعُ النَّاسَ وَمَا أَنزَلَ اللَّهُ مِنَ السَّمَاءِ مِن مَّاءٍ فَأَحْيَا بِهِ الْأَرْضَ بَعْدَ مَوْتِهَا وَبَثَّ فِيهَا مِن كُلِّ دَابَّةٍ وَتَصْرِيفِ الرِّيَاحِ وَالسَّحَابِ الْمُسَخَّرِ بَيْنَ السَّمَاءِ وَالْأَرْضِ لَآيَاتٍ لِّقَوْمٍ يَعْقِلُونَ﴾"},
+  parts:[
+    {title:"أ) اختر المعنى الصحيح للكلمات التالية", qs:[
+      {type:"mcq", q:"الفُلْك", options:["السفن التي تجري في البحر","السماوات والأرض","السحاب والرياح"], answer:0},
+      {type:"mcq", q:"لآيات", options:["سور قرآنية","علامات واضحات","قصص وعبر"], answer:1},
+      {type:"mcq", q:"اختلاف الليل والنهار", options:["تعاقبهما","طولهما","شدة الحر والبرد"], answer:0},
+      {type:"mcq", q:"وإلهكم", options:["معبودكم","خالقكم","رازقكم"], answer:0}
+    ]},
+    {title:"ب) أسئلة كتابية مقالية", qs:[
+      {type:"essay", q:"أستنتج فائدتين ترشد إليها الآيتان الكريمتان.",
+       answer:"1- وجوب الإقرار بوحدانية الله تعالى.<br>2- التفكر والتأمل في الكون من سبل الإيمان.",
+       keywords:[["وحدانيه","واحد","توحيد"],["تفكر","تامل"],["ايمان","الكون"]]},
+      {type:"essay", q:"لماذا ختم الله الآية 163 بقوله ﴿هُوَ الرَّحْمَٰنُ الرَّحِيمُ﴾؟",
+       answer:"ترويحاً للقلوب، وإشعاراً بأن رحمة الله سبقت غضبه، وأن لخلقه منه كل الرحمة والإحسان.",
+       keywords:[["ترويح","القلوب"],["رحمه","رحمته"],["سبقت","غضبه"],["احسان"]]},
+      {type:"essay", q:"اذكر ثلاثة من المخلوقات التي دعا الله للتفكر فيها في الآية 164.",
+       answer:"خلق السماوات والأرض — تعاقب الليل والنهار — السفن التي تجري في البحر — نزول المطر وإحياء الأرض (ويكفي ذكر ثلاثة).",
+       keywords:[["سماوات","سماء","ارض"],["ليل","نهار"],["سفن","فلك","بحر"],["مطر","ماء"],["رياح","سحاب"],["دابه"]], need:3}
+    ]}
+  ]
+},
+{
+  id:"hadith", title:"الحديث الشريف", icon:"📜", full:"فضل قراءة القرآن ومدارسته",
+  parts:[
+    {title:"أ) أكمل الفراغ بالكلمة المناسبة", qs:[
+      {type:"fill", q:"أكمل نص الحديث الشريف:",
+       pre:"عن أبي هريرة رضي الله عنه قال: قال رسول الله ﷺ: ((وما اجتمع قوم في بيت من بيوت الله يتلون كتاب الله ويتدارسونه بينهم إلا نزلت عليهم",
+       segments:[" {0}، وغشيتهم {1}، وحفتهم {2}، وذكرهم الله فيمن عنده))."],
+       blanks:[["السكينة"],["الرحمة"],["الملائكة"]], bank:["السكينة","الرحمة","الملائكة"]}
+    ]},
+    {title:"ب) صل الكلمة بمعناها", qs:[
+      {type:"match", q:"اختر المعنى المناسب لكل عبارة:",
+       pairs:[["حفتهم الملائكة","أحاطت بهم تكريماً ورعاية"],["غشيتهم الرحمة","شملتهم وغمرتهم رحمة الله"],["السكينة","الطمأنينة والشعور بالرضا"],["يتدارسونه بينهم","يتعاهدونه حفظاً وفهماً"]]}
+    ]},
+    {title:"ج) ضع علامة (✓) أو (✗)", qs:[
+      {type:"tf", q:"يتدارسونه بينهم تعني يتعهدونه حفظاً وفهماً ودراسة.", answer:true},
+      {type:"tf", q:"خير الأماكن لتعلم القرآن ومدارسته هي البيوت فقط.", answer:false, fix:"الأفضل المساجد، وتصح مدارسته في غيرها."},
+      {type:"tf", q:"تنزل السكينة والطمأنينة فقط على من يقرأ القرآن في المسجد.", answer:false, fix:"تنزل السكينة على من يقرأ القرآن ويتدارسه في المسجد وغيره."},
+      {type:"tf", q:"أعد الله ثواباً عظيماً وأجراً كبيراً لمن يتعلم القرآن ويتعاهده.", answer:true},
+      {type:"tf", q:"راوي الحديث الشريف هو أبو هريرة رضي الله عنه.", answer:true}
+    ]}
+  ]
+},
+{
+  id:"tafakkur", title:"التفكر في مخلوقات الله", icon:"🌿", full:"التفكر والتأمل في مخلوقات الله",
+  parts:[
+    {title:"أ) أسئلة كتابية مقالية", qs:[
+      {type:"essay", q:"بماذا ميز الله تبارك وتعالى الإنسان وفضله على غيره من المخلوقات؟",
+       answer:"بالعقل، والجسم والهيئة في أحسن تقويم.", keywords:[["عقل"],["جسم","هيئه","تقويم"]]},
+      {type:"essay", q:"ما موقف الإسلام ممن يعطلون عقولهم عن التفكير؟",
+       answer:"ذمهم الله تبارك وتعالى بسبب تعطيل عقولهم وعدم إعمالها.", keywords:[["ذم","ذمهم"],["تعطيل","عقول","اعمال"]]},
+      {type:"essay", q:"ما فائدة اللسان في خلق النفس الإنسانية؟",
+       answer:"لتذوق الطعام والشراب، والتكلم.", keywords:[["تذوق","طعم","طعام"],["كلام","تكلم","نطق"]]},
+      {type:"match", q:"بيّن إعجاز الخالق في النفس الإنسانية: صل كل عضو بوظيفته.",
+       pairs:[["اليد","للعمل والكتابة والشراب"],["القدم","للسير عليها"],["العين","لرؤية الأشياء"],["الأذن","لسماع الأصوات"],["الأنف","لشم الروائح"]]},
+      {type:"essay", q:"ما أثر التفكر والتأمل في الكون على الإنسان؟",
+       answer:"يهديه إلى الحق، ويعلم أن الله ربه، ويزيد من قوة الإيمان، ويرسخ العقيدة الصحيحة.",
+       keywords:[["حق"],["ربه","الله"],["ايمان"],["عقيده"]], need:2}
+    ]},
+    {title:"ب) ضع علامة (✓) أو (✗) مع التصحيح", qs:[
+      {type:"tf", q:"وُصف الذين يعطلون عقولهم عن التفكير بالجمال.", answer:false, fix:"وصفهم الله بالأنعام الضالة.", askFix:true, fixKeywords:["انعام"]}
+    ]}
+  ]
+},
+{
+  id:"janaza", title:"صلاة الجنازة", icon:"🕌", full:"صلاة الجنازة",
+  parts:[
+    {title:"أ) أسئلة كتابية وموضوعية", qs:[
+      {type:"mcq", q:"ما حكم صلاة الجنازة في الإسلام؟", options:["فرض عين","فرض كفاية","سنة مؤكدة","مستحبة"], answer:1},
+      {type:"essay", q:"ما حكم صلاة الجنازة في الإسلام؟ (اكتب الإجابة)", answer:"فرض كفاية.", keywords:[["كفايه"]]},
+      {type:"essay", q:"اذكر إحدى الحِكَم من مشروعية صلاة الجنازة.",
+       answer:"فرصة لتوديع الميت والدعاء له — أو: مشاركة أهله المصاب — أو: أخذ العبرة وتذكر المصير.",
+       keywords:[["توديع","وداع","يودع"],["دعاء"],["مشاركه","مصاب","اهله"],["عبره","مصير","تذكر"]], need:1},
+      {type:"order", q:"رتّب أعمال تكبيرات صلاة الجنازة بالترتيب الصحيح (اسحب أو استخدم الأسهم):",
+       labels:["التكبيرة الأولى","التكبيرة الثانية","التكبيرة الثالثة","التكبيرة الرابعة"],
+       items:["قراءة سورة الفاتحة","الصلاة على النبي ﷺ (الصلاة الإبراهيمية)","الدعاء للميت بالرحمة والمغفرة","الدعاء: «اللهم لا تحرمنا أجره ولا تفتنا بعده واغفر لنا وله»"]}
+    ]},
+    {title:"ب) ضع علامة (✓) أو (✗)", qs:[
+      {type:"tf", q:"عدد تكبيرات صلاة الجنازة أربع تكبيرات.", answer:true},
+      {type:"tf", q:"يضع المصلي في صلاة الجنازة يده اليسرى على اليد اليمنى.", answer:false, fix:"يضع اليد اليمنى على اليسرى."},
+      {type:"tf", q:"يقرأ المصلي في التكبيرة الثانية سورة الفاتحة.", answer:false, fix:"الفاتحة في التكبيرة الأولى، وفي الثانية الصلاة على النبي ﷺ."},
+      {type:"tf", q:"حكم صلاة الجنازة فرض كفاية على المسلمين.", answer:true},
+      {type:"tf", q:"شُرعت صلاة الجنازة لتكون فرصة يودع فيها المسلمون الميت.", answer:true}
+    ]}
+  ]
+},
+{
+  id:"fath", title:"فتح مكة", icon:"🏴", full:"فتح مكة (8 هـ)",
+  parts:[
+    {title:"أ) أسئلة كتابية وموضوعية", qs:[
+      {type:"essay", q:"متى حدث فتح مكة؟", answer:"صبيحة يوم الجمعة 20 رمضان السنة 8 هـ.",
+       keywords:[["20","٢٠","عشرين"],["رمضان"],["8","٨","ثامنه","ثمان"]], need:2},
+      {type:"essay", q:"ما سبب فتح مكة؟", answer:"نقض قريش لصلح الحديبية بمساعدة قبيلة بكر في الاعتداء على خزاعة.",
+       keywords:[["نقض"],["حديبيه","صلح"],["بكر"],["خزاعه"]], need:2},
+      {type:"mcq", q:"كم عدد المسلمين الذين خرجوا مع النبي ﷺ لفتح مكة؟", options:["3,000 مسلم","10,000 مسلم","1,400 مسلم","12,000 مسلم"], answer:1},
+      {type:"essay", q:"اذكر ثلاثة أعمال قام بها النبي ﷺ بعد فتح مكة.",
+       answer:"1- الطواف حول الكعبة وتحطيم الأصنام.<br>2- العفو عن قريش وقوله: «اذهبوا فأنتم الطلقاء».<br>3- أمر بلالاً بالأذان فوق الكعبة.",
+       keywords:[["طواف","طاف"],["اصنام","تحطيم","كسر"],["عفو","طلقاء"],["بلال","اذان"]], need:3},
+      {type:"mcq", q:"من القائل: «يا معشر قريش لقد جاءكم محمد بما لا قِبَل لكم به»؟", options:["أبو سفيان بن حرب","العباس بن عبد المطلب","خالد بن الوليد","بلال بن رباح"], answer:0},
+      {type:"essay", q:"ما المناسبة التي قال فيها أبو سفيان: «يا معشر قريش لقد جاءكم محمد بما لا قبل لكم به»؟",
+       answer:"قالها أبو سفيان بن حرب عند رؤيته لجيش المسلمين.", keywords:[["رؤيته","راي","شاهد","رؤيه"],["جيش"]]}
+    ]},
+    {title:"ب) ضع علامة (✓) أو (✗)", qs:[
+      {type:"tf", q:"دخل المسلمون مكة فاتحين في 20 رمضان سنة 8 هـ.", answer:true},
+      {type:"tf", q:"قسم النبي ﷺ الجيش إلى ثلاث فرق.", answer:false, fix:"قسمهم إلى خمس (5) فرق."},
+      {type:"tf", q:"دلالة قول النبي ﷺ لقريش «اذهبوا فأنتم الطلقاء» هي العفو والتسامح.", answer:true},
+      {type:"tf", q:"عدد المسلمين الذين خرجوا لفتح مكة 10000.", answer:true},
+      {type:"tf", q:"أخفى النبي ﷺ وجهته على الصحابة حتى لا تعلم قريش بمسيره فتستعد لذلك.", answer:true},
+      {type:"tf", q:"طاف النبي ﷺ حول الكعبة سبعة أشواط.", answer:true}
+    ]}
+  ]
+}
+];
+
+/* ============ الحالة ============ */
+const KEY = "islamic-review-g8-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ state = {}; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
+
+// assign ids
+SECTIONS.forEach(s => s.parts.forEach((p,pi) => p.qs.forEach((q,qi) => q.id = `${s.id}-${pi}-${qi}`)));
+const allQs = s => s.parts.flatMap(p => p.qs);
+
+/* ============ أدوات ============ */
+function norm(t){
+  return (t||"").replace(/[ً-ْٰـ]/g,"")
+    .replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي")
+    .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
+    .replace(/[^؀-ۿ0-9a-z\s]/gi," ").replace(/\s+/g," ").trim();
+}
+function stripAl(w){ return w.replace(/^(وال|بال|ال)/,""); }
+function shuffle(a){ a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function el(tag, attrs={}, html=""){ const e=document.createElement(tag); for(const k in attrs){ if(k==="class") e.className=attrs[k]; else e.setAttribute(k,attrs[k]); } if(html) e.innerHTML=html; return e; }
+function record(q, correct){ state[q.id] = {done:true, correct:!!correct}; save(); updateScores(); }
+
+/* ============ واجهة ============ */
+let current = "quran";
+const tabsEl = document.getElementById("tabs");
+const app = document.getElementById("app");
+
+function renderTabs(){
+  tabsEl.innerHTML = "";
+  [...SECTIONS, {id:"summary", title:"النتيجة", icon:"🏆"}].forEach(s => {
+    const b = el("button",{class:"tab"+(s.id===current?" active":"")});
+    let pct = "";
+    if (s.parts){ const qs=allQs(s); const d=qs.filter(q=>state[q.id]?.done).length; pct=`<span class="pct">${d}/${qs.length}</span>`; }
+    b.innerHTML = `${s.icon} ${s.title}${pct}`;
+    b.onclick = () => { current = s.id; render(); window.scrollTo({top:0,behavior:"smooth"}); };
+    tabsEl.appendChild(b);
+  });
+  const act = tabsEl.querySelector(".active"); if (act) act.scrollIntoView({inline:"center",block:"nearest"});
+}
+
+function updateScores(){
+  const qs = SECTIONS.flatMap(allQs);
+  const c = qs.filter(q=>state[q.id]?.correct).length;
+  document.getElementById("gScore").textContent = `${c} / ${qs.length}`;
+  const sec = SECTIONS.find(s=>s.id===current);
+  if (sec){ const sq=allQs(sec); const d=sq.filter(q=>state[q.id]?.done).length; const bar=document.getElementById("secBar"); if(bar) bar.style.width=(d/sq.length*100)+"%"; }
+  renderTabs();
+}
+
+function render(){
+  app.innerHTML = "";
+  if (current === "summary") { renderSummary(); renderTabs(); return; }
+  const s = SECTIONS.find(x=>x.id===current);
+  const head = el("div",{class:"section-head"});
+  head.innerHTML = `<h2>${s.icon} ${s.full}</h2>`;
+  const rb = el("button",{class:"btn ghost"},"↺ إعادة القسم");
+  rb.onclick = () => { allQs(s).forEach(q=>delete state[q.id]); save(); render(); updateScores(); };
+  head.appendChild(rb);
+  app.appendChild(head);
+  app.appendChild(el("div",{class:"progress"},`<i id="secBar"></i>`));
+  if (s.ref) app.appendChild(el("div",{class:"ref"},`<div class="lbl">${s.ref.label}</div><p class="${s.ref.quran?"quran":""}">${s.ref.text}</p>`));
+  let n = 0;
+  s.parts.forEach(p => {
+    app.appendChild(el("div",{class:"part-title"},p.title));
+    p.qs.forEach(q => app.appendChild(renderQ(q, ++n)));
+  });
+  updateScores();
+}
+
+const TYPE_LABEL = {mcq:"اختيار من متعدد", essay:"سؤال مقالي", tf:"صح أو خطأ", fill:"أكمل الفراغ", match:"توصيل", order:"ترتيب"};
+
+function renderQ(q, n){
+  const card = el("div",{class:"q"});
+  card.innerHTML = `<div class="q-head"><div class="num">${n}</div><div class="q-text">${q.q}</div><span class="badge">${TYPE_LABEL[q.type]}</span></div>`;
+  const body = el("div",{class:"q-body"});
+  const fb = el("div",{class:"feedback"});
+  card.appendChild(body);
+  const mark = ok => { card.classList.remove("correct","wrong"); card.classList.add(ok?"correct":"wrong"); };
+  const show = (ok, html) => { fb.className = "feedback show " + (ok===null?"info":ok?"ok":"no"); fb.innerHTML = html; };
+  ({mcq:buildMcq, tf:buildTf, essay:buildEssay, fill:buildFill, match:buildMatch, order:buildOrder})[q.type](q, body, mark, show);
+  card.appendChild(fb);
+  return card;
+}
+
+/* اختيار من متعدد */
+function buildMcq(q, body, mark, show){
+  const box = el("div",{class:"opts"});
+  const order = shuffle(q.options.map((_,i)=>i));
+  const btns = [];
+  order.forEach(i => {
+    const b = el("button",{class:"opt"}, q.options[i]);
+    b.onclick = () => {
+      const ok = i === q.answer;
+      btns.forEach(x => { x.disabled = true; if (+x.dataset.i === q.answer) x.classList.add("ok"); });
+      if (!ok) b.classList.add("no");
+      mark(ok);
+      show(ok, ok ? "✔ أحسنت! إجابة صحيحة." : `✘ إجابة خاطئة. الصحيح: <b>${q.options[q.answer]}</b>`);
+      record(q, ok);
+    };
+    b.dataset.i = i; btns.push(b); box.appendChild(b);
+  });
+  body.appendChild(box);
+}
+
+/* صح وخطأ */
+function buildTf(q, body, mark, show){
+  const box = el("div",{class:"tf"});
+  const yes = el("button",{class:"opt"},"✓"), no = el("button",{class:"opt"},"✗");
+  const finish = (pick) => {
+    const ok = pick === q.answer;
+    [yes,no].forEach(b=>b.disabled=true);
+    (q.answer?yes:no).classList.add("ok");
+    if (!ok) (pick?yes:no).classList.add("no");
+    mark(ok);
+    let msg = ok ? "✔ أحسنت!" : `✘ خطأ، الإجابة الصحيحة (${q.answer?"✓":"✗"})`;
+    if (q.fix) msg += `<div class="model"><b>التصحيح:</b> ${q.fix}</div>`;
+    show(ok, msg);
+    record(q, ok);
+  };
+  yes.onclick = () => finish(true);
+  no.onclick = () => {
+    if (q.askFix && !q.answer){
+      [yes,no].forEach(b=>b.disabled=true); no.classList.add("ok");
+      const ta = el("textarea",{rows:"2",placeholder:"اكتب التصحيح هنا..."});
+      const btn = el("button",{class:"btn"},"تحقق من التصحيح");
+      const row = el("div",{class:"row"}); row.appendChild(btn);
+      body.appendChild(el("div",{class:"self"},"إجابتك (✗) صحيحة، اكتب الآن التصحيح:")); body.appendChild(ta); body.appendChild(row);
+      btn.onclick = () => {
+        const t = norm(ta.value); const ok = q.fixKeywords.some(k=>t.includes(k));
+        btn.disabled = true; ta.disabled = true; mark(ok);
+        show(ok, (ok?"✔ تصحيح ممتاز!":"✘ التصحيح غير دقيق.")+`<div class="model"><b>التصحيح:</b> ${q.fix}</div>`);
+        record(q, ok);
+      };
+      return;
+    }
+    finish(false);
+  };
+  box.append(yes,no); body.appendChild(box);
+}
+
+/* مقالي */
+function buildEssay(q, body, mark, show){
+  const ta = el("textarea",{rows:"3",placeholder:"اكتب إجابتك هنا..."});
+  const check = el("button",{class:"btn"},"تحقق وأظهر الإجابة");
+  const reveal = el("button",{class:"btn ghost"},"أظهر الإجابة فقط");
+  const row = el("div",{class:"row"}); row.append(check, reveal);
+  body.append(ta,row);
+  const finish = (withText) => {
+    check.disabled = reveal.disabled = true;
+    let html = "";
+    let suggest = null;
+    if (withText){
+      const t = norm(ta.value);
+      const words = t.split(" ").map(stripAl);
+      const hits = q.keywords.map(g => g.some(k => { const nk = stripAl(norm(k)); return t.includes(nk) || words.some(w=>w.includes(nk)); }));
+      const count = hits.filter(Boolean).length;
+      const need = q.need || Math.max(1, Math.ceil(q.keywords.length/2));
+      suggest = count >= need;
+      html += `<div>العناصر الأساسية في إجابتك: ` + q.keywords.map((g,i)=>`<span class="kw ${hits[i]?"hit":"miss"}">${hits[i]?"✔":"○"} ${g[0]}</span>`).join("") + `</div>`;
+      html += suggest ? `<div>👍 إجابتك تبدو صحيحة.</div>` : `<div>⚠ إجابتك ينقصها بعض العناصر.</div>`;
+    }
+    html += `<div class="model"><b>الإجابة النموذجية:</b><br>${q.answer}</div>`;
+    html += `<div class="self">قيّم نفسك بعد المقارنة: <button class="btn okb" data-r="1">أجبت صحيحاً ✔</button> <button class="btn badb" data-r="0">أخطأت ✘</button></div>`;
+    show(null, html);
+    const fb = body.parentElement.querySelector(".feedback");
+    fb.querySelectorAll("[data-r]").forEach(b => b.onclick = () => {
+      const ok = b.dataset.r === "1";
+      fb.querySelectorAll("[data-r]").forEach(x=>x.disabled=true);
+      mark(ok); fb.classList.remove("info"); fb.classList.add(ok?"ok":"no");
+      record(q, ok);
+    });
+  };
+  check.onclick = () => { if (!ta.value.trim()) { ta.focus(); ta.placeholder="اكتب إجابتك أولاً ✍"; return; } finish(true); };
+  reveal.onclick = () => finish(false);
+}
+
+/* أكمل الفراغ */
+function buildFill(q, body, mark, show){
+  const p = el("p",{class:"hadith"});
+  p.innerHTML = q.pre + q.segments[0].replace(/\{(\d)\}/g, (_,i)=>`<input class="blank" data-i="${i}" placeholder="......">`);
+  body.appendChild(p);
+  if (q.bank) body.appendChild(el("div",{class:"self"},"كلمات مساعدة: " + shuffle(q.bank).map(w=>`<span class="kw miss">${w}</span>`).join("")));
+  const btn = el("button",{class:"btn"},"تحقق");
+  const row = el("div",{class:"row"}); row.appendChild(btn); body.appendChild(row);
+  btn.onclick = () => {
+    const ins = [...p.querySelectorAll("input")];
+    let all = true;
+    ins.forEach(inp => {
+      const i = +inp.dataset.i;
+      const ok = q.blanks[i].some(a => stripAl(norm(a)) === stripAl(norm(inp.value)));
+      inp.classList.add(ok?"ok":"no"); inp.disabled = true;
+      if (!ok){ all = false; inp.value = q.blanks[i][0]; }
+    });
+    btn.disabled = true; mark(all);
+    show(all, all ? "✔ ممتاز! أكملت الحديث بشكل صحيح." : "✘ بعض الفراغات خاطئة، وتم وضع الكلمات الصحيحة (باللون الأحمر).");
+    record(q, all);
+  };
+}
+
+/* توصيل */
+function buildMatch(q, body, mark, show){
+  const box = el("div",{class:"match"});
+  const opts = shuffle(q.pairs.map(p=>p[1]));
+  const rows = q.pairs.map(([l]) => {
+    const r = el("div",{class:"match-row"});
+    const sel = el("select");
+    sel.innerHTML = `<option value="">— اختر —</option>` + opts.map(o=>`<option>${o}</option>`).join("");
+    r.append(el("b",{},l), sel); box.appendChild(r);
+    return {r, sel};
+  });
+  body.appendChild(box);
+  const btn = el("button",{class:"btn"},"تحقق");
+  const row = el("div",{class:"row"}); row.appendChild(btn); body.appendChild(row);
+  btn.onclick = () => {
+    let c = 0;
+    rows.forEach(({r,sel},i) => {
+      const ok = sel.value === q.pairs[i][1];
+      r.classList.add(ok?"ok":"no"); sel.disabled = true;
+      if (ok) c++; else r.appendChild(el("div",{class:"fix"},"✔ الصحيح: "+q.pairs[i][1]));
+    });
+    const all = c === rows.length;
+    btn.disabled = true; mark(all);
+    show(all, all ? "✔ ممتاز! جميع الإجابات صحيحة." : `أصبت في ${c} من ${rows.length}. راجع التصحيحات أعلاه.`);
+    record(q, all);
+  };
+}
+
+/* ترتيب */
+function buildOrder(q, body, mark, show){
+  let idx;
+  do { idx = shuffle(q.items.map((_,i)=>i)); } while (idx.every((v,i)=>v===i));
+  const ul = el("ul",{class:"order"});
+  let locked = false, dragEl = null;
+  const draw = () => {
+    ul.innerHTML = "";
+    idx.forEach((it,pos) => {
+      const li = el("li",{draggable:"true"});
+      li.dataset.it = it;
+      li.innerHTML = `<span class="pos">${q.labels[pos]}</span><span class="txt">${q.items[it]}</span><span class="mv"><button aria-label="أعلى">▲</button><button aria-label="أسفل">▼</button></span>`;
+      const [up,down] = li.querySelectorAll(".mv button");
+      up.onclick = () => { if(locked||pos===0) return; [idx[pos-1],idx[pos]]=[idx[pos],idx[pos-1]]; draw(); };
+      down.onclick = () => { if(locked||pos===idx.length-1) return; [idx[pos+1],idx[pos]]=[idx[pos],idx[pos+1]]; draw(); };
+      li.addEventListener("dragstart", () => { if(locked) return; dragEl = pos; li.classList.add("dragging"); });
+      li.addEventListener("dragend", () => li.classList.remove("dragging"));
+      li.addEventListener("dragover", e => e.preventDefault());
+      li.addEventListener("drop", e => { e.preventDefault(); if(locked||dragEl===null) return; const [m]=idx.splice(dragEl,1); idx.splice(pos,0,m); dragEl=null; draw(); });
+      ul.appendChild(li);
+    });
+  };
+  draw();
+  body.appendChild(ul);
+  const btn = el("button",{class:"btn"},"تحقق من الترتيب");
+  const row = el("div",{class:"row"}); row.appendChild(btn); body.appendChild(row);
+  btn.onclick = () => {
+    locked = true; btn.disabled = true;
+    const lis = [...ul.children];
+    let all = true;
+    lis.forEach((li,pos) => { const ok = +li.dataset.it === pos; if(!ok) all=false; li.classList.add(ok?"ok":"no"); li.draggable=false; });
+    mark(all);
+    show(all, all ? "✔ ترتيب صحيح، أحسنت!" :
+      "✘ الترتيب غير صحيح. الترتيب الصحيح:<div class='model'>" + q.items.map((t,i)=>`<b>${q.labels[i]}:</b> ${t}`).join("<br>") + "</div>");
+    record(q, all);
+  };
+}
+
+/* النتيجة */
+function renderSummary(){
+  const box = el("div",{class:"summary"});
+  const qs = SECTIONS.flatMap(allQs);
+  const c = qs.filter(q=>state[q.id]?.correct).length;
+  const d = qs.filter(q=>state[q.id]?.done).length;
+  const pct = qs.length ? Math.round(c/qs.length*100) : 0;
+  let msg = d < qs.length ? `أجبت عن ${d} من ${qs.length} سؤالاً — أكمل بقية الأسئلة 💪` :
+    pct >= 90 ? "ممتاز! ما شاء الله، أنت مستعد للاختبار 🌟" : pct >= 70 ? "جيد جداً! راجع الأخطاء وستصل للعلامة الكاملة 👏" : "تحتاج إلى مزيد من المراجعة، أعد الأقسام التي أخطأت فيها 📚";
+  box.innerHTML = `<h2 class="center" style="margin:0;color:var(--primary)">🏆 نتيجتك</h2>
+    <div class="big-score">${pct}%</div><p class="center">${msg}</p>
+    <table><tr><th>القسم</th><th>تمت الإجابة</th><th>الصحيح</th></tr>` +
+    SECTIONS.map(s => { const sq=allQs(s); return `<tr><td>${s.icon} ${s.title}</td><td>${sq.filter(q=>state[q.id]?.done).length} / ${sq.length}</td><td>${sq.filter(q=>state[q.id]?.correct).length}</td></tr>`; }).join("") +
+    `<tr><th>المجموع</th><th>${d} / ${qs.length}</th><th>${c}</th></tr></table>`;
+  app.appendChild(box);
+}
+
+/* أزرار عامة */
+document.getElementById("resetBtn").onclick = () => { if (confirm("هل تريد مسح جميع الإجابات والبدء من جديد؟")) { state = {}; save(); render(); } };
+const themeBtn = document.getElementById("themeBtn");
+function applyTheme(t){ if (t) document.documentElement.dataset.theme = t; }
+try { applyTheme(localStorage.getItem(KEY+"-theme")); } catch(e){}
+themeBtn.onclick = () => {
+  const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  const t = dark ? "light" : "dark"; applyTheme(t);
+  try { localStorage.setItem(KEY+"-theme", t); } catch(e){}
+};
+
+render();
+</script>
+</body>
+</html>
