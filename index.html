@@ -165,12 +165,21 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;padding:20px 0 30px}
 .modal-box label small{display:block;color:var(--muted)}
 .modal-box .hint{font-size:.85rem;color:var(--muted)}
 
+/* الحفظ والاستعادة */
+.save-status{font-size:.85rem;opacity:.9;margin-top:8px}
+.hdr-btn.reset{background:rgba(185,28,28,.35);border-color:rgba(255,255,255,.45)}
+.hdr-btn.reset:hover{background:rgba(185,28,28,.55)}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(30px);background:#134e4a;color:#fff;padding:10px 18px;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.3s;z-index:60;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.q.resume{outline:3px solid var(--gold);outline-offset:3px;transition:outline-color .5s}
+.wrong-item .wy{color:var(--bad);margin-top:4px}
+
 /* ورقة الطباعة */
 #printSheet{display:none}
 @media print{
   @page{size:A4;margin:12mm}
   body{background:#fff;color:#000;font-size:13pt}
-  body>header,nav.tabs,main,footer,.modal{display:none!important}
+  body>header,nav.tabs,main,footer,.modal,.toast{display:none!important}
   #printSheet{display:block}
 }
 .ps{color:#000;background:#fff;font-family:"Tajawal","DejaVu Sans",sans-serif;line-height:1.7}
@@ -189,6 +198,9 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;padding:20px 0 30px}
 .ps table{width:100%;border-collapse:collapse;margin-top:4px}
 .ps td{border:1px solid #cfd8d4;padding:3px 8px;vertical-align:top}
 .ps .fillb{font-weight:800;color:#0b5d2a;text-decoration:underline}
+.ps .mine{background:#f6f6f6;border-right:3px solid #888;padding:3px 8px;margin-top:4px;border-radius:4px}
+.ps .st{font-size:10.5pt;border-radius:999px;padding:0 8px;margin-inline-start:6px;white-space:nowrap}
+.ps .st.ok{background:#dcfce7;color:#15803d}.ps .st.no{background:#fee2e2;color:#b91c1c}.ps .st.pend{background:#eee;color:#555}
 .ps .ps-foot{text-align:center;font-size:10pt;color:#555;margin-top:12px}
 </style>
 </head>
@@ -202,10 +214,11 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;padding:20px 0 30px}
       </div>
       <div class="score-box"><b id="gScore">0 / 0</b><small>إجاباتك الصحيحة</small></div>
     </div>
+    <div class="save-status" id="saveStatus"></div>
     <div class="hdr-actions">
       <button class="hdr-btn" id="printBtn">🖨 طباعة / PDF</button>
       <button class="hdr-btn" id="themeBtn">🌓 الوضع الليلي</button>
-      <button class="hdr-btn" id="resetBtn">↺ إعادة الكل</button>
+      <button class="hdr-btn reset" id="resetBtn">🗑 إعادة ضبط الاختبار / مسح الإجابات المحفوظة</button>
     </div>
   </div>
 </header>
@@ -225,6 +238,7 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;padding:20px 0 30px}
       <legend>النوع</legend>
       <label><input type="radio" name="pMode" value="1" checked><span>✅ مع الحل<small>الأسئلة مع الإجابات النموذجية للمراجعة والحفظ</small></span></label>
       <label><input type="radio" name="pMode" value="0"><span>📝 بدون حل (ورقة فارغة)<small>الأسئلة فقط مع مساحات للكتابة كاختبار تجريبي</small></span></label>
+      <label><input type="radio" name="pMode" value="mine"><span>💾 إجاباتي المحفوظة مع التصحيح <small id="mineCount"></small><small>إجاباتك المحفوظة على هذا الجهاز مع الدرجة والإجابة الصحيحة لكل خطأ</small></span></label>
     </fieldset>
     <p class="hint">لحفظ الملف PDF: اختر «حفظ كـ PDF» من نافذة الطباعة (على الآيفون: مشاركة ← حفظ في الملفات).</p>
     <div class="row">
@@ -234,6 +248,7 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;padding:20px 0 30px}
   </div>
 </div>
 <div id="printSheet"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 /* ============ البيانات ============ */
@@ -300,6 +315,8 @@ const SECTIONS = [
     ]},
     {title:"ب) ترتيب الآيات", qs:[ {...AYAT_ORDER} ]},
     {title:"ج) أسئلة كتابية مقالية", qs:[
+      {type:"essay", q:"من هو الإله الذي يستحق العبادة؟", answer:"هو الله وحده الذي تجب له الطاعة المطلقة.",
+       keywords:[["الله","وحده"],["طاعه","المطلقه"]]},
       {type:"essay", q:"أستنتج فائدتين ترشد إليها الآيتان الكريمتان.",
        answer:"أ- وجوب الإقرار بوحدانية الله تعالى.<br>ب- البحث والتأمل في مظاهر الكون من سبل الإيمان بالله تعالى.",
        keywords:[["وحدانيه","واحد","توحيد"],["تفكر","تامل","بحث"],["ايمان","الكون"]]},
@@ -307,7 +324,7 @@ const SECTIONS = [
        answer:"ترويحاً للقلوب، وإشعاراً بأن رحمة الله سبقت غضبه، وأن لخلقه منه كل الرحمة والإحسان.",
        keywords:[["ترويح","القلوب"],["رحمه","رحمته"],["سبقت","غضبه"],["احسان"]]},
       {type:"essay", q:"اذكر ثلاثة من المخلوقات التي دعا الله للتفكر فيها في الآية 164.",
-       answer:"خلق السماوات والأرض — تعاقب الليل والنهار — السفن التي تجري في البحر — نزول المطر وإحياء الأرض (ويكفي ذكر ثلاثة).",
+       answer:"السماوات والأرض — تعاقب الليل والنهار — السفن التي تجري في البحر — نزول المطر وإحياء الأرض — تصريف الرياح — تصريف السحاب (ويكفي ذكر ثلاثة).",
        keywords:[["سماوات","سماء","ارض"],["ليل","نهار"],["سفن","فلك","بحر"],["مطر","ماء"],["رياح","سحاب"],["دابه"]], need:3}
     ]}
   ]
@@ -318,7 +335,7 @@ const SECTIONS = [
     {title:"أ) أكمل الفراغ بالكلمة المناسبة", qs:[ {...HADITH_FILL} ]},
     {title:"ب) صل الكلمة بمعناها", qs:[
       {type:"match", q:"اختر المعنى المناسب لكل عبارة:",
-       pairs:[["حفتهم الملائكة","أحاطت بهم تكريماً ورعاية"],["غشيتهم الرحمة","شملتهم وغمرتهم رحمة الله"],["السكينة","الطمأنينة والشعور بالرضا"],["يتدارسونه بينهم","يتعاهدونه حفظاً وفهماً"]]}
+       pairs:[["يتلون كتاب الله","يقرؤون القرآن"],["حفتهم الملائكة","أحاطت بهم تكريماً ورعاية لهم"],["غشيتهم الرحمة","شملتهم وغمرتهم رحمة الله"],["السكينة","الطمأنينة والشعور بالرضا"],["يتدارسونه بينهم","يتعاهدونه حفظاً وفهماً"]]}
     ]},
     {title:"ج) ضع علامة (✓) أو (✗)", qs:[
       {type:"tf", q:"يتدارسونه بينهم تعني يتعهدونه حفظاً وفهماً ودراسة.", answer:true},
@@ -326,6 +343,17 @@ const SECTIONS = [
       {type:"tf", q:"تنزل السكينة والطمأنينة فقط على من يقرأ القرآن في المسجد.", answer:false, fix:"تنزل السكينة على من يقرأ القرآن ويتدارسه في المسجد وغيره."},
       {type:"tf", q:"أعد الله ثواباً عظيماً وأجراً كبيراً لمن يتعلم القرآن ويتعاهده.", answer:true},
       {type:"tf", q:"راوي الحديث الشريف هو أبو هريرة رضي الله عنه.", answer:true}
+    ]},
+    {title:"د) أسئلة كتابية", qs:[
+      {type:"essay", q:"ما أفضل الأماكن لتلاوة القرآن الكريم؟ وهل تقتصر التلاوة على هذا المكان؟",
+       answer:"أفضل الأماكن لتلاوة القرآن الكريم: المساجد (بيوت الله).<br>ولا تقتصر التلاوة على المساجد، وإنما تكون في المدارس والمعاهد والبيوت... إلخ.",
+       keywords:[["مسجد","مساجد","بيوت الله"],["تقتصر","مدارس","بيوت","معاهد"]]},
+      {type:"essay", q:"ما الجزاء الذي أعدّه الله تعالى لروّاد مجالس العلم والذكر؟",
+       answer:"نزول السكينة عليهم، ومنحهم الهدوء والطمأنينة، ومباركة الملائكة مجالسهم.",
+       keywords:[["سكينه"],["هدوء","طمانينه"],["ملائكه"]], need:2},
+      {type:"essay", q:"استنتج فائدتين يرشد إليها الحديث الشريف.",
+       answer:"1- من واجب المسلمين أن يُقبلوا على تلاوة القرآن الكريم ومدارسته.<br>2- مجالس القرآن وعلوم الدين من أفضل المجالس عند الله.",
+       keywords:[["يقبلوا","تلاوه","مدارسته"],["مجالس","افضل"]]}
     ]}
   ]
 },
@@ -334,14 +362,18 @@ const SECTIONS = [
   parts:[
     {title:"أ) أسئلة كتابية مقالية", qs:[
       {...HUMAN_ESSAY},
-      {type:"essay", q:"ما موقف الإسلام ممن يعطلون عقولهم عن التفكير؟",
-       answer:"ذمهم الله تبارك وتعالى بسبب تعطيل عقولهم وعدم إعمالها.", keywords:[["ذم","ذمهم"],["تعطيل","عقول","اعمال"]]},
+      {type:"essay", q:"ما موقف الإسلام من الذين يعطلون عقولهم عن التفكير مع بيان وصفهم؟",
+       answer:"الموقف: ذمهم الله تبارك وتعالى بسبب تعطيلهم للعقول وعدم إعمالها في التفكير.<br>وصفهم: وصفهم الله تبارك وتعالى بالأنعام الضالة.",
+       keywords:[["ذم","ذمهم"],["تعطيل","عقول","اعمال"],["انعام"]], need:2},
+      {type:"essay", q:"ما الفوائد المستفادة من الأنعام؟",
+       answer:"أ- يأكل من لحومها ويشرب ألبانها.<br>ب- يستخدمها في الركوب والعمل.<br>ج- يصنع ملابسه من أوبارها وصوفها وشعرها.",
+       keywords:[["لحوم","لحومها","البان","البانها","اكل"],["ركوب","عمل"],["صوف","اوبار","شعر","ملابس"]], need:2},
       {type:"essay", q:"ما فائدة اللسان في خلق النفس الإنسانية؟",
        answer:"لتذوق الطعام والشراب، والتكلم.", keywords:[["تذوق","طعم","طعام"],["كلام","تكلم","نطق"]]},
-      {type:"match", q:"بيّن إعجاز الخالق في النفس الإنسانية: صل كل عضو بوظيفته.",
-       pairs:[["اليد","للعمل والكتابة والشراب"],["القدم","للسير عليها"],["العين","لرؤية الأشياء"],["الأذن","لسماع الأصوات"],["الأنف","لشم الروائح"]]},
+      {type:"match", q:"قال تعالى: ﴿وَفِي أَنفُسِكُمْ ۚ أَفَلَا تُبْصِرُونَ﴾ — بيّن إعجاز الخالق في النفس الإنسانية: صل كل عضو بوظيفته.",
+       pairs:[["اليد","للعمل والكتابة والأكل والشرب"],["اللسان","لتذوق الطعام والشراب"],["القدم","للسير عليها"],["العين","لرؤية الأشياء"],["الأذن","لسماع الأصوات"],["الأنف","لشم الروائح"]]},
       {type:"essay", q:"ما أثر التفكر والتأمل في الكون على الإنسان؟",
-       answer:"يهديه إلى الحق، ويعلم أن الله ربه، ويزيد من قوة الإيمان، ويرسخ العقيدة الصحيحة.",
+       answer:"يهدي الإنسان إلى الحق والصراط المستقيم، ويعلم أن لله رباً، ويزيد من قوة الإيمان، ويرسخ العقيدة الصحيحة في عقله وقلبه.",
        keywords:[["حق"],["ربه","الله"],["ايمان"],["عقيده"]], need:2}
     ]},
     {title:"ب) املأ الفراغ", qs:[ {...TONGUE_FILL} ]},
@@ -353,11 +385,14 @@ const SECTIONS = [
   parts:[
     {title:"أ) أسئلة كتابية وموضوعية", qs:[
       {type:"mcq", q:"ما حكم صلاة الجنازة في الإسلام؟", options:["فرض عين","فرض كفاية","سنة مؤكدة","مستحبة"], answer:1},
-      {type:"essay", q:"ما حكم صلاة الجنازة في الإسلام؟ (اكتب الإجابة)", answer:"فرض كفاية.", keywords:[["كفايه"]]},
+      {type:"essay", q:"ما حكم صلاة الجنازة في الإسلام؟ (اكتب الإجابة)", answer:"فرض كفاية: إذا صلّى عليه جماعة رُفع الإثم عن الآخرين، ويأثموا إذا لم يصلّوا عليه.", keywords:[["كفايه"],["اثم"]], need:1},
       {type:"essay", q:"اذكر إحدى الحِكَم من مشروعية صلاة الجنازة.",
-       answer:"فرصة لتوديع الميت والدعاء له — أو: مشاركة أهله المصاب — أو: أخذ العبرة وتذكر المصير.",
+       answer:"فرصة لتوديع الميت والدعاء له بالرحمة والمغفرة — أو: مشاركة أهل الميت مصابهم وحثّهم على الصبر — أو: أخذ العبرة وتذكر مصيرهم مما يدفعهم للعمل لما بعد الموت.",
        keywords:[["توديع","وداع","يودع"],["دعاء"],["مشاركه","مصاب","اهله"],["عبره","مصير","تذكر"]], need:1},
-      {...JANAZA_ORDER}
+      {...JANAZA_ORDER},
+      {type:"essay", q:"كيف تؤدّى صلاة الجنازة؟",
+       answer:"1- توضع الجنازة جهة القبلة ويقف المصلون صفوفاً مستوية خلف الإمام.<br>2- يكبّر الإمام أربع تكبيرات ويرفع يده، ويضع اليد اليمنى على اليسرى: الأولى: قراءة الفاتحة — الثانية: الصلاة على النبي ﷺ (الصلاة الإبراهيمية) — الثالثة: الدعاء للميت بالرحمة والمغفرة — الرابعة: الدعاء «اللهم لا تحرمنا أجره ولا تفتنا بعده واغفر لنا وله».<br>3- التسليم عن اليمين والشمال.",
+       keywords:[["قبله"],["صفوف","امام"],["اربع","تكبيرات"],["تسليم","يسلم"]], need:3}
     ]},
     {title:"ب) ضع علامة (✓) أو (✗)", qs:[
       {type:"tf", q:"عدد تكبيرات صلاة الجنازة أربع تكبيرات.", answer:true},
@@ -373,15 +408,22 @@ const SECTIONS = [
   parts:[
     {title:"أ) أسئلة كتابية وموضوعية", qs:[
       {...FATH_DATE},
-      {type:"essay", q:"ما سبب فتح مكة؟", answer:"نقض قريش لصلح الحديبية بمساعدة قبيلة بكر في الاعتداء على خزاعة.",
+      {type:"essay", q:"ما سبب نقض قريش لصلح الحديبية؟ أو: ما سبب فتح مكة؟", answer:"قيام قريش بمساعدة قبيلة بكر (حليفتها) بالاعتداء على قبيلة خزاعة (حليفة المسلمين)، فنقضت بذلك صلح الحديبية.",
        keywords:[["نقض"],["حديبيه","صلح"],["بكر"],["خزاعه"]], need:2},
+      {type:"essay", q:"هل أعلم النبي ﷺ المسلمين بوجهته؟ وكم كان عدد من خرج معه؟",
+       answer:"لم يُعلمهم بوجهته حتى لا تعلم قريش بمسيره فتستعد له، وكان عدد من خرج معه 10,000 مسلم.",
+       keywords:[["لم","لا"],["قريش","تستعد"],["10000","10 000","عشره الاف","عشر الاف"]], need:2},
+      {type:"mcq", q:"كم عدد الفرق التي شكّلها النبي ﷺ لدخول مكة؟", options:["ثلاث فرق","أربع فرق","خمس فرق","ست فرق"], answer:2},
+      {type:"essay", q:"اذكر قادة الفرق التي شكّلها النبي ﷺ لدخول مكة.",
+       answer:"1- فرقة بقيادة الرسول ﷺ.<br>2- فرقة بقيادة خالد بن الوليد.<br>3- فرقة بقيادة الزبير بن العوام.<br>4- فرقة بقيادة سعد بن عبادة.<br>5- فرقة بقيادة أبي عبيدة بن الجراح.",
+       keywords:[["خالد"],["زبير"],["سعد"],["عبيده"],["رسول","النبي"]], need:3},
       {type:"mcq", q:"كم عدد المسلمين الذين خرجوا مع النبي ﷺ لفتح مكة؟", options:["3,000 مسلم","10,000 مسلم","1,400 مسلم","12,000 مسلم"], answer:1},
       {type:"essay", q:"اذكر ثلاثة أعمال قام بها النبي ﷺ بعد فتح مكة.",
        answer:"1- الطواف حول الكعبة وتحطيم الأصنام.<br>2- العفو عن قريش وقوله: «اذهبوا فأنتم الطلقاء».<br>3- أمر بلالاً بالأذان فوق الكعبة.",
        keywords:[["طواف","طاف"],["اصنام","تحطيم","كسر"],["عفو","طلقاء"],["بلال","اذان"]], need:3},
       {type:"mcq", q:"من القائل: «يا معشر قريش لقد جاءكم محمد بما لا قِبَل لكم به»؟", options:["أبو سفيان بن حرب","العباس بن عبد المطلب","خالد بن الوليد","بلال بن رباح"], answer:0},
       {type:"essay", q:"ما المناسبة التي قال فيها أبو سفيان: «يا معشر قريش لقد جاءكم محمد بما لا قبل لكم به»؟",
-       answer:"قالها أبو سفيان بن حرب عند رؤيته لجيش المسلمين.", keywords:[["رؤيته","راي","شاهد","رؤيه"],["جيش"]]}
+       answer:"القائل: أبو سفيان بن حرب.<br>المناسبة: عندما أسره المسلمون ومرّ الجيش من أمامه، وأكرمه الرسول ﷺ بقوله: «من دخل دار أبي سفيان فهو آمن».", keywords:[["اسر","اسره"],["جيش","مر"],["امن","دار"]], need:2}
     ]},
     {title:"ب) ضع علامة (✓) أو (✗)", qs:[
       {type:"tf", q:"دخل المسلمون مكة فاتحين في 20 رمضان سنة 8 هـ.", answer:true},
@@ -395,15 +437,48 @@ const SECTIONS = [
 }
 ];
 
-/* ============ الحالة ============ */
-const KEY = "islamic-review-g8-v2";
-let state = {};
-try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ state = {}; }
-function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
-
-// assign ids
-SECTIONS.forEach(s => s.parts.forEach((p,pi) => p.qs.forEach((q,qi) => q.id = `${s.id}-${pi}-${qi}`)));
+/* ============ الحالة والحفظ التلقائي (localStorage) ============ */
+const KEY = "islamic-review-g8-v3";      // الإجابات: { [qid]: {done, correct, ans} أو {draft} }
+const UI_KEY = KEY + "-ui";              // آخر تبويب وآخر سؤال وإعدادات الطباعة
 const allQs = s => s.parts.flatMap(p => p.qs);
+
+let storageOK = true, lastSaved = null;
+function load(key){
+  try { return JSON.parse(localStorage.getItem(key)) || {}; } catch(e){ storageOK = false; return {}; }
+}
+let state = load(KEY);
+let ui = load(UI_KEY);
+try { localStorage.setItem(KEY + "-test", "1"); localStorage.removeItem(KEY + "-test"); } catch(e){ storageOK = false; }
+
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(state)); storageOK = true; lastSaved = new Date(); }
+  catch(e){ storageOK = false; }
+  showSaveStatus();
+}
+function saveUI(){ try { localStorage.setItem(UI_KEY, JSON.stringify(ui)); } catch(e){} }
+function showSaveStatus(){
+  const s = document.getElementById("saveStatus");
+  if (!s) return;
+  if (!storageOK) { s.textContent = "⚠ الحفظ التلقائي غير متاح في هذا المتصفح (مثل وضع التصفح الخاص)"; return; }
+  s.textContent = "💾 الحفظ التلقائي مفعّل" + (lastSaved ? ` — آخر حفظ ${lastSaved.toLocaleTimeString("ar", {hour:"numeric", minute:"2-digit"})}` : "");
+}
+
+// معرّف ثابت لكل سؤال (لا يتغير بإضافة أسئلة جديدة)
+function hash(str){ let h = 5381; for (const c of str) h = ((h << 5) + h + c.codePointAt(0)) | 0; return (h >>> 0).toString(36); }
+SECTIONS.forEach(s => allQs(s).forEach(q => q.id = `${s.id}:${q.type}:${hash(q.q + (q.pre || ""))}`));
+
+// حفظ إجابة نهائية
+function record(q, correct, ans){
+  state[q.id] = {done:true, correct:!!correct, ans};
+  touch(q); save(); updateScores();
+}
+// حفظ إجابة لم يتم التحقق منها بعد (مسودة)
+function setDraft(q, draft){
+  if (state[q.id]?.done) return;
+  state[q.id] = {draft};
+  touch(q); save();
+}
+function touch(q){ ui.lastQ = q.id; ui.tab = current; saveUI(); }
 
 /* ============ أدوات ============ */
 function norm(t){
@@ -415,12 +490,19 @@ function norm(t){
 function stripAl(w){ return w.replace(/^(وال|بال|ال)/,""); }
 function shuffle(a){ a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
 function el(tag, attrs={}, html=""){ const e=document.createElement(tag); for(const k in attrs){ if(k==="class") e.className=attrs[k]; else e.setAttribute(k,attrs[k]); } if(html) e.innerHTML=html; return e; }
-function record(q, correct){ state[q.id] = {done:true, correct:!!correct}; save(); updateScores(); }
+function esc(t){ return String(t ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.innerHTML = msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 3500);
+}
 
 /* ============ واجهة ============ */
-let current = "exam";
+let current = SECTIONS.some(s => s.id === ui.tab) || ui.tab === "summary" ? ui.tab : "exam";
 const tabsEl = document.getElementById("tabs");
 const app = document.getElementById("app");
+
+function goTab(id){ current = id; ui.tab = id; saveUI(); render(); window.scrollTo({top:0, behavior:"smooth"}); }
 
 function renderTabs(){
   tabsEl.innerHTML = "";
@@ -429,7 +511,7 @@ function renderTabs(){
     let pct = "";
     if (s.parts){ const qs=allQs(s); const d=qs.filter(q=>state[q.id]?.done).length; pct=`<span class="pct">${d}/${qs.length}</span>`; }
     b.innerHTML = `${s.icon} ${s.title}${pct}`;
-    b.onclick = () => { current = s.id; render(); window.scrollTo({top:0,behavior:"smooth"}); };
+    b.onclick = () => goTab(s.id);
     tabsEl.appendChild(b);
   });
   const act = tabsEl.querySelector(".active"); if (act) act.scrollIntoView({inline:"center",block:"nearest"});
@@ -451,7 +533,7 @@ function render(){
   const head = el("div",{class:"section-head"});
   head.innerHTML = `<h2>${s.icon} ${s.full}</h2>`;
   const rb = el("button",{class:"btn ghost"},"↺ إعادة القسم");
-  rb.onclick = () => { allQs(s).forEach(q=>delete state[q.id]); save(); render(); updateScores(); };
+  rb.onclick = () => { if (!confirm("مسح إجابات هذا القسم فقط؟")) return; allQs(s).forEach(q=>delete state[q.id]); save(); render(); };
   head.appendChild(rb);
   app.appendChild(head);
   app.appendChild(el("div",{class:"progress"},`<i id="secBar"></i>`));
@@ -470,43 +552,44 @@ function render(){
 const TYPE_LABEL = {mcq:"اختيار من متعدد", essay:"سؤال مقالي", tf:"صح أو خطأ", fill:"أكمل الفراغ", match:"توصيل", order:"ترتيب"};
 
 function renderQ(q, n){
-  const card = el("div",{class:"q"});
+  const card = el("div",{class:"q", id:"q-" + q.id});
   card.innerHTML = `<div class="q-head"><div class="num">${n}</div><div class="q-text">${q.q}</div><span class="badge">${TYPE_LABEL[q.type]}</span></div>`;
   const body = el("div",{class:"q-body"});
   const fb = el("div",{class:"feedback"});
-  card.appendChild(body);
+  card.append(body, fb);
   const mark = ok => { card.classList.remove("correct","wrong"); card.classList.add(ok?"correct":"wrong"); };
   const show = (ok, html) => { fb.className = "feedback show " + (ok===null?"info":ok?"ok":"no"); fb.innerHTML = html; };
-  ({mcq:buildMcq, tf:buildTf, essay:buildEssay, fill:buildFill, match:buildMatch, order:buildOrder})[q.type](q, body, mark, show);
-  card.appendChild(fb);
+  const st = state[q.id] || {};
+  ({mcq:buildMcq, tf:buildTf, essay:buildEssay, fill:buildFill, match:buildMatch, order:buildOrder})[q.type](q, body, mark, show, st, fb);
   return card;
 }
 
-/* اختيار من متعدد */
-function buildMcq(q, body, mark, show){
+/* اختيار من متعدد — ans: رقم الخيار */
+function buildMcq(q, body, mark, show, st){
   const box = el("div",{class:"opts"});
-  const order = shuffle(q.options.map((_,i)=>i));
   const btns = [];
-  order.forEach(i => {
+  const finish = (pick, restoring) => {
+    const ok = pick === q.answer;
+    btns.forEach(x => { x.disabled = true; if (+x.dataset.i === q.answer) x.classList.add("ok"); if (+x.dataset.i === pick && !ok) x.classList.add("no"); });
+    mark(ok);
+    show(ok, ok ? "✔ أحسنت! إجابة صحيحة." : `✘ إجابة خاطئة. الصحيح: <b>${q.options[q.answer]}</b>`);
+    if (!restoring) record(q, ok, pick);
+  };
+  shuffle(q.options.map((_,i)=>i)).forEach(i => {
     const b = el("button",{class:"opt"}, q.options[i]);
-    b.onclick = () => {
-      const ok = i === q.answer;
-      btns.forEach(x => { x.disabled = true; if (+x.dataset.i === q.answer) x.classList.add("ok"); });
-      if (!ok) b.classList.add("no");
-      mark(ok);
-      show(ok, ok ? "✔ أحسنت! إجابة صحيحة." : `✘ إجابة خاطئة. الصحيح: <b>${q.options[q.answer]}</b>`);
-      record(q, ok);
-    };
-    b.dataset.i = i; btns.push(b); box.appendChild(b);
+    b.dataset.i = i; b.onclick = () => finish(i);
+    btns.push(b); box.appendChild(b);
   });
   body.appendChild(box);
+  if (st.done) finish(st.ans, true);
 }
 
-/* صح وخطأ */
-function buildTf(q, body, mark, show){
+/* صح وخطأ — ans: {pick, fix} */
+function buildTf(q, body, mark, show, st){
   const box = el("div",{class:"tf"});
   const yes = el("button",{class:"opt"},"✓"), no = el("button",{class:"opt"},"✗");
-  const finish = (pick) => {
+  box.append(yes,no); body.appendChild(box);
+  const finish = (pick, restoring) => {
     const ok = pick === q.answer;
     [yes,no].forEach(b=>b.disabled=true);
     (q.answer?yes:no).classList.add("ok");
@@ -515,75 +598,91 @@ function buildTf(q, body, mark, show){
     let msg = ok ? "✔ أحسنت!" : `✘ خطأ، الإجابة الصحيحة (${q.answer?"✓":"✗"})`;
     if (q.fix) msg += `<div class="model"><b>التصحيح:</b> ${q.fix}</div>`;
     show(ok, msg);
-    record(q, ok);
+    if (!restoring) record(q, ok, {pick});
   };
+  // عند اختيار (✗) الصحيح يُطلب من الطالب كتابة التصحيح
+  const askFix = () => {
+    [yes,no].forEach(b=>b.disabled=true); no.classList.add("ok");
+    const ta = el("textarea",{rows:"2",placeholder:"اكتب التصحيح هنا..."});
+    const btn = el("button",{class:"btn"},"تحقق من التصحيح");
+    const row = el("div",{class:"row"}); row.appendChild(btn);
+    body.append(el("div",{class:"self"},"إجابتك (✗) صحيحة، اكتب الآن التصحيح:"), ta, row);
+    ta.oninput = () => setDraft(q, {pick:false, fix:ta.value});
+    const check = (restoring) => {
+      const t = norm(ta.value); const ok = q.fixKeywords.some(k=>t.includes(k));
+      btn.disabled = true; ta.readOnly = true; mark(ok);
+      show(ok, (ok?"✔ تصحيح ممتاز!":"✘ التصحيح غير دقيق.")+`<div class="model"><b>التصحيح:</b> ${q.fix}</div>`);
+      if (!restoring) record(q, ok, {pick:false, fix:ta.value});
+    };
+    btn.onclick = () => check(false);
+    return {ta, check};
+  };
+  const needsFix = q.askFix && !q.answer;
   yes.onclick = () => finish(true);
-  no.onclick = () => {
-    if (q.askFix && !q.answer){
-      [yes,no].forEach(b=>b.disabled=true); no.classList.add("ok");
-      const ta = el("textarea",{rows:"2",placeholder:"اكتب التصحيح هنا..."});
-      const btn = el("button",{class:"btn"},"تحقق من التصحيح");
-      const row = el("div",{class:"row"}); row.appendChild(btn);
-      body.appendChild(el("div",{class:"self"},"إجابتك (✗) صحيحة، اكتب الآن التصحيح:")); body.appendChild(ta); body.appendChild(row);
-      btn.onclick = () => {
-        const t = norm(ta.value); const ok = q.fixKeywords.some(k=>t.includes(k));
-        btn.disabled = true; ta.disabled = true; mark(ok);
-        show(ok, (ok?"✔ تصحيح ممتاز!":"✘ التصحيح غير دقيق.")+`<div class="model"><b>التصحيح:</b> ${q.fix}</div>`);
-        record(q, ok);
-      };
-      return;
-    }
-    finish(false);
-  };
-  box.append(yes,no); body.appendChild(box);
+  no.onclick = () => { if (needsFix) { askFix(); setDraft(q, {pick:false, fix:""}); } else finish(false); };
+  if (st.done){
+    if (needsFix && st.ans.pick === false){ const a = askFix(); a.ta.value = st.ans.fix || ""; a.check(true); }
+    else finish(st.ans.pick, true);
+  } else if (needsFix && st.draft?.pick === false){
+    askFix().ta.value = st.draft.fix || "";
+  }
 }
 
-/* مقالي */
-function buildEssay(q, body, mark, show){
+/* مقالي — ans: {text, stage, self} */
+function buildEssay(q, body, mark, show, st, fb){
   const ta = el("textarea",{rows:"3",placeholder:"اكتب إجابتك هنا..."});
   const check = el("button",{class:"btn"},"تحقق وأظهر الإجابة");
   const reveal = el("button",{class:"btn ghost"},"أظهر الإجابة فقط");
   const row = el("div",{class:"row"}); row.append(check, reveal);
   body.append(ta,row);
-  const finish = (withText) => {
-    check.disabled = reveal.disabled = true;
+  let stage = null;
+  ta.oninput = () => setDraft(q, {text:ta.value, stage});
+  const grade = (ok, restoring) => {
+    fb.querySelectorAll("[data-r]").forEach(x=>x.disabled=true);
+    mark(ok); fb.classList.remove("info"); fb.classList.add(ok?"ok":"no");
+    if (!restoring) record(q, ok, {text:ta.value, stage, self:ok});
+  };
+  const finish = (withText, restoring) => {
+    stage = withText ? "check" : "reveal";
+    check.disabled = reveal.disabled = true; ta.readOnly = true;
     let html = "";
-    let suggest = null;
     if (withText){
       const t = norm(ta.value);
       const words = t.split(" ").map(stripAl);
       const hits = q.keywords.map(g => g.some(k => { const nk = stripAl(norm(k)); return t.includes(nk) || words.some(w=>w.includes(nk)); }));
       const count = hits.filter(Boolean).length;
       const need = q.need || Math.max(1, Math.ceil(q.keywords.length/2));
-      suggest = count >= need;
       html += `<div>العناصر الأساسية في إجابتك: ` + q.keywords.map((g,i)=>`<span class="kw ${hits[i]?"hit":"miss"}">${hits[i]?"✔":"○"} ${g[0]}</span>`).join("") + `</div>`;
-      html += suggest ? `<div>👍 إجابتك تبدو صحيحة.</div>` : `<div>⚠ إجابتك ينقصها بعض العناصر.</div>`;
+      html += count >= need ? `<div>👍 إجابتك تبدو صحيحة.</div>` : `<div>⚠ إجابتك ينقصها بعض العناصر.</div>`;
     }
     html += `<div class="model"><b>الإجابة النموذجية:</b><br>${q.answer}</div>`;
     html += `<div class="self">قيّم نفسك بعد المقارنة: <button class="btn okb" data-r="1">أجبت صحيحاً ✔</button> <button class="btn badb" data-r="0">أخطأت ✘</button></div>`;
     show(null, html);
-    const fb = body.parentElement.querySelector(".feedback");
-    fb.querySelectorAll("[data-r]").forEach(b => b.onclick = () => {
-      const ok = b.dataset.r === "1";
-      fb.querySelectorAll("[data-r]").forEach(x=>x.disabled=true);
-      mark(ok); fb.classList.remove("info"); fb.classList.add(ok?"ok":"no");
-      record(q, ok);
-    });
+    fb.querySelectorAll("[data-r]").forEach(b => b.onclick = () => grade(b.dataset.r === "1"));
+    if (!restoring) setDraft(q, {text:ta.value, stage});
   };
   check.onclick = () => { if (!ta.value.trim()) { ta.focus(); ta.placeholder="اكتب إجابتك أولاً ✍"; return; } finish(true); };
   reveal.onclick = () => finish(false);
+  const saved = st.done ? st.ans : st.draft;
+  if (saved){
+    ta.value = saved.text || "";
+    if (saved.stage) finish(saved.stage === "check", true);
+    if (st.done) grade(st.ans.self, true);
+  }
 }
 
-/* أكمل الفراغ */
-function buildFill(q, body, mark, show){
+/* أكمل الفراغ — ans: [نص كل فراغ كما كتبه الطالب] */
+function buildFill(q, body, mark, show, st){
   const p = el("p",{class:"hadith"});
   p.innerHTML = q.pre + q.segments[0].replace(/\{(\d)\}/g, (_,i)=>`<input class="blank" data-i="${i}" placeholder="......">`);
   body.appendChild(p);
   if (q.bank) body.appendChild(el("div",{class:"self"},"كلمات مساعدة: " + shuffle(q.bank).map(w=>`<span class="kw miss">${w}</span>`).join("")));
   const btn = el("button",{class:"btn"},"تحقق");
   const row = el("div",{class:"row"}); row.appendChild(btn); body.appendChild(row);
-  btn.onclick = () => {
-    const ins = [...p.querySelectorAll("input")];
+  const ins = [...p.querySelectorAll("input")];
+  ins.forEach(inp => inp.oninput = () => setDraft(q, ins.map(x=>x.value)));
+  const check = (restoring) => {
+    const values = ins.map(x=>x.value);
     let all = true;
     ins.forEach(inp => {
       const i = +inp.dataset.i;
@@ -594,12 +693,16 @@ function buildFill(q, body, mark, show){
     });
     btn.disabled = true; mark(all);
     show(all, (all ? "✔ ممتاز! إجابة صحيحة." : "✘ بعض الفراغات خاطئة، وتم وضع الإجابة الصحيحة (باللون الأحمر).") + `<div class="model"><b>الإجابة:</b> ${fillText(q, true, "b")}</div>`);
-    record(q, all);
+    if (!restoring) record(q, all, values);
   };
+  btn.onclick = () => check(false);
+  const saved = st.done ? st.ans : st.draft;
+  if (Array.isArray(saved)) ins.forEach((inp,i) => inp.value = saved[i] || "");
+  if (st.done) check(true);
 }
 
-/* توصيل */
-function buildMatch(q, body, mark, show){
+/* توصيل — ans: [المعنى المختار لكل عبارة] */
+function buildMatch(q, body, mark, show, st){
   const box = el("div",{class:"match"});
   const opts = shuffle(q.pairs.map(p=>p[1]));
   const rows = q.pairs.map(([l]) => {
@@ -609,10 +712,11 @@ function buildMatch(q, body, mark, show){
     r.append(el("b",{},l), sel); box.appendChild(r);
     return {r, sel};
   });
+  rows.forEach(({sel}) => sel.onchange = () => setDraft(q, rows.map(x=>x.sel.value)));
   body.appendChild(box);
   const btn = el("button",{class:"btn"},"تحقق");
   const row = el("div",{class:"row"}); row.appendChild(btn); body.appendChild(row);
-  btn.onclick = () => {
+  const check = (restoring) => {
     let c = 0;
     rows.forEach(({r,sel},i) => {
       const ok = sel.value === q.pairs[i][1];
@@ -622,16 +726,24 @@ function buildMatch(q, body, mark, show){
     const all = c === rows.length;
     btn.disabled = true; mark(all);
     show(all, all ? "✔ ممتاز! جميع الإجابات صحيحة." : `أصبت في ${c} من ${rows.length}. راجع التصحيحات أعلاه.`);
-    record(q, all);
+    if (!restoring) record(q, all, rows.map(x=>x.sel.value));
   };
+  btn.onclick = () => check(false);
+  const saved = st.done ? st.ans : st.draft;
+  if (Array.isArray(saved)) rows.forEach(({sel},i) => sel.value = saved[i] || "");
+  if (st.done) check(true);
 }
 
-/* ترتيب */
-function buildOrder(q, body, mark, show){
+/* ترتيب — ans: ترتيب العناصر كما رتبها الطالب */
+function buildOrder(q, body, mark, show, st){
+  const saved = st.done ? st.ans : st.draft;
+  const valid = Array.isArray(saved) && saved.length === q.items.length && q.items.every((_,i)=>saved.includes(i));
   let idx;
-  do { idx = shuffle(q.items.map((_,i)=>i)); } while (idx.every((v,i)=>v===i));
+  if (valid) idx = [...saved];
+  else do { idx = shuffle(q.items.map((_,i)=>i)); } while (idx.every((v,i)=>v===i));
   const ul = el("ul",{class:"order"});
   let locked = false, dragEl = null;
+  const moved = () => { draw(); setDraft(q, [...idx]); };
   const draw = () => {
     ul.innerHTML = "";
     idx.forEach((it,pos) => {
@@ -639,12 +751,12 @@ function buildOrder(q, body, mark, show){
       li.dataset.it = it;
       li.innerHTML = `<span class="pos">${q.labels[pos]}</span><span class="txt">${q.items[it]}</span><span class="mv"><button aria-label="أعلى">▲</button><button aria-label="أسفل">▼</button></span>`;
       const [up,down] = li.querySelectorAll(".mv button");
-      up.onclick = () => { if(locked||pos===0) return; [idx[pos-1],idx[pos]]=[idx[pos],idx[pos-1]]; draw(); };
-      down.onclick = () => { if(locked||pos===idx.length-1) return; [idx[pos+1],idx[pos]]=[idx[pos],idx[pos+1]]; draw(); };
+      up.onclick = () => { if(locked||pos===0) return; [idx[pos-1],idx[pos]]=[idx[pos],idx[pos-1]]; moved(); };
+      down.onclick = () => { if(locked||pos===idx.length-1) return; [idx[pos+1],idx[pos]]=[idx[pos],idx[pos+1]]; moved(); };
       li.addEventListener("dragstart", () => { if(locked) return; dragEl = pos; li.classList.add("dragging"); });
       li.addEventListener("dragend", () => li.classList.remove("dragging"));
       li.addEventListener("dragover", e => e.preventDefault());
-      li.addEventListener("drop", e => { e.preventDefault(); if(locked||dragEl===null) return; const [m]=idx.splice(dragEl,1); idx.splice(pos,0,m); dragEl=null; draw(); });
+      li.addEventListener("drop", e => { e.preventDefault(); if(locked||dragEl===null) return; const [m]=idx.splice(dragEl,1); idx.splice(pos,0,m); dragEl=null; moved(); });
       ul.appendChild(li);
     });
   };
@@ -652,16 +764,17 @@ function buildOrder(q, body, mark, show){
   body.appendChild(ul);
   const btn = el("button",{class:"btn"},"تحقق من الترتيب");
   const row = el("div",{class:"row"}); row.appendChild(btn); body.appendChild(row);
-  btn.onclick = () => {
+  const check = (restoring) => {
     locked = true; btn.disabled = true;
-    const lis = [...ul.children];
     let all = true;
-    lis.forEach((li,pos) => { const ok = +li.dataset.it === pos; if(!ok) all=false; li.classList.add(ok?"ok":"no"); li.draggable=false; });
+    [...ul.children].forEach((li,pos) => { const ok = +li.dataset.it === pos; if(!ok) all=false; li.classList.add(ok?"ok":"no"); li.draggable=false; });
     mark(all);
     show(all, all ? "✔ ترتيب صحيح، أحسنت!" :
       "✘ الترتيب غير صحيح. الترتيب الصحيح:<div class='model'>" + q.items.map((t,i)=>`<b>${q.labels[i]}:</b> ${t}`).join("<br>") + "</div>");
-    record(q, all);
+    if (!restoring) record(q, all, [...idx]);
   };
+  btn.onclick = () => check(false);
+  if (st.done) check(true);
 }
 
 /* النتيجة */
@@ -687,13 +800,16 @@ function renderSummary(){
     wrongBox.innerHTML = `<h3 style="margin:0;color:var(--primary)">✅ الأسئلة التي أخطأت فيها</h3><p>${d ? "لا توجد أخطاء حتى الآن، أحسنت! 🌟" : "لم تجب عن أي سؤال بعد."}</p>`;
   } else {
     wrongBox.innerHTML = `<h3 style="margin:0 0 4px;color:var(--bad)">❌ الأسئلة التي أخطأت فيها (${wrongs.length})</h3><p class="hint" style="margin-top:0">راجع الإجابة الصحيحة لكل سؤال لتثبيت المعلومة:</p>` +
-      wrongs.map(({s,q}) => `<div class="wrong-item"><div class="ws">${s.icon} ${s.title} — ${TYPE_LABEL[q.type]}</div><div class="wq">${q.q}${q.type==="fill"?"<br>"+fillText(q,false):""}</div><div class="wa">✔ الإجابة الصحيحة: ${answerHTML(q)}</div></div>`).join("");
+      wrongs.map(({s,q}) => `<div class="wrong-item"><div class="ws">${s.icon} ${s.title} — ${TYPE_LABEL[q.type]}</div><div class="wq">${q.q}${q.type==="fill"?"<br>"+fillText(q,false):""}</div><div class="wy">✘ إجابتك: ${studentAnswerHTML(q, state[q.id])}</div><div class="wa">✔ الإجابة الصحيحة: ${answerHTML(q)}</div></div>`).join("");
     const retry = el("button",{class:"btn"},"↺ أعد حل الأسئلة الخاطئة فقط");
-    retry.onclick = () => { wrongs.forEach(({q}) => delete state[q.id]); save(); current = wrongs[0].s.id; render(); window.scrollTo({top:0}); };
+    retry.onclick = () => { wrongs.forEach(({q}) => delete state[q.id]); save(); goTab(wrongs[0].s.id); };
     const row = el("div",{class:"row"}); row.appendChild(retry); wrongBox.appendChild(row);
   }
   app.appendChild(wrongBox);
-  app.appendChild(printCta());
+  const cta = printCta();
+  const rs = el("button",{class:"btn badb"},"🗑 إعادة ضبط الاختبار / مسح الإجابات المحفوظة");
+  rs.onclick = resetAll; cta.appendChild(rs);
+  app.appendChild(cta);
 }
 
 /* ============ نص الإجابة ============ */
@@ -710,14 +826,32 @@ function answerHTML(q){
     case "order": return q.items.map((t,i)=>`<b>${q.labels[i]}:</b> ${t}`).join("<br>");
   }
 }
+// إجابة الطالب المحفوظة (نهائية أو مسودة)
+function studentAnswerHTML(q, st){
+  const a = st?.done ? st.ans : st?.draft;
+  const none = "<i>(لم يُجب)</i>";
+  if (a === undefined || a === null) return none;
+  switch(q.type){
+    case "mcq": return q.options[a] ?? none;
+    case "essay": return a.text?.trim() ? esc(a.text).replace(/\n/g,"<br>") : (a.stage === "reveal" ? "<i>(اطّلع على الإجابة دون أن يكتب)</i>" : none);
+    case "tf": return `(${a.pick?"✓":"✗"})` + (a.fix ? ` — التصحيح: ${esc(a.fix)}` : "");
+    case "fill": return a.some(v=>v?.trim()) ? a.map(v=>esc(v)||"……").join(" — ") : none;
+    case "match": return q.pairs.map(([l],i)=>`<b>${l}:</b> ${esc(a[i])||"—"}`).join("<br>");
+    case "order": return a.map((it,pos)=>`<b>${q.labels[pos]}:</b> ${q.items[it]}`).join("<br>");
+  }
+}
 
 /* ============ ورقة الطباعة ============ */
 const LETTERS = ["أ","ب","ج","د","هـ","و"];
 const rotate = (n, k=1) => Array.from({length:n}, (_,i) => (i + k) % n);
 const lines = n => `<div class="lines">${"<span></span>".repeat(n)}</div>`;
 
+function qTitle(q, n){
+  return `${n}) ${q.type==="mcq" ? "اختر الإجابة الصحيحة: " : q.type==="tf" ? "ضع علامة (✓) أو (✗): " : ""}${q.q.replace(/\s*\(اسحب[^)]*\)/, "")}`;
+}
+
 function printQ(q, n, A){
-  let h = `<div class="pq"><div class="t">${n}) ${q.type==="mcq" ? "اختر الإجابة الصحيحة: " : q.type==="tf" ? "ضع علامة (✓) أو (✗): " : ""}${q.q.replace(/\s*\(اسحب[^)]*\)/, "")}${q.type==="tf" ? (A ? ` <b style="color:#0b5d2a">(${q.answer?"✓":"✗"})</b>` : " (&nbsp;&nbsp;&nbsp;&nbsp;)") : ""}</div>`;
+  let h = `<div class="pq"><div class="t">${qTitle(q, n)}${q.type==="tf" ? (A ? ` <b style="color:#0b5d2a">(${q.answer?"✓":"✗"})</b>` : " (&nbsp;&nbsp;&nbsp;&nbsp;)") : ""}</div>`;
   switch(q.type){
     case "mcq":
       h += `<div class="opts-p">` + q.options.map((o,i)=>`<span class="${A&&i===q.answer?"c":""}">${A&&i===q.answer?"☑":"☐"} ${o}</span>`).join("") + `</div>`; break;
@@ -742,17 +876,33 @@ function printQ(q, n, A){
   return h + `</div>`;
 }
 
-function buildPrint(scope, A){
-  const secs = scope === "exam" ? SECTIONS.filter(s=>s.id==="exam") : SECTIONS.filter(s=>s.id!=="exam");
+// ورقة إجابات الطالب المحفوظة مع التصحيح
+function printMine(q, n){
+  const st = state[q.id];
+  const status = st?.done ? (st.correct ? `<span class="st ok">✔ صحيحة</span>` : `<span class="st no">✘ خاطئة</span>`)
+    : st?.draft ? `<span class="st pend">⏳ لم يُتحقق منها</span>` : `<span class="st pend">○ لم يُجب</span>`;
+  let h = `<div class="pq"><div class="t">${qTitle(q, n)} ${status}</div>`;
+  if (q.type === "fill") h += `<div>${fillText(q, false)}</div>`;
+  h += `<div class="mine">إجابتي: ${studentAnswerHTML(q, st)}</div>`;
+  if (!st?.correct) h += `<div class="ans">الإجابة الصحيحة: ${answerHTML(q)}</div>`;
+  return h + `</div>`;
+}
+
+function buildPrint(scope, mode){
+  const A = mode === "1", mine = mode === "mine";
+  const secs = scope === "exam" ? SECTIONS.filter(s=>s.id==="exam") : SECTIONS.filter(s=>mine || s.id!=="exam");
+  const qs = secs.flatMap(allQs);
+  const label = mine ? "<b>إجاباتي المحفوظة مع التصحيح</b>" : A ? "<b>نسخة مع الحل</b>" : "<b>ورقة عمل (بدون حل)</b>";
   let h = `<div class="ps"><div class="ps-head"><h1>${scope==="exam" ? "⭐ أسئلة الامتحان المهمة" : "📚 ملخص مراجعة"} — التربية الإسلامية</h1>
-    <div>الصف الثاني الإعدادي — الاختبار الأول — ${A ? "<b>نسخة مع الحل</b>" : "<b>ورقة عمل (بدون حل)</b>"}</div>
-    ${A ? "" : `<div class="meta"><span>الاسم: ........................................</span><span>الصف: ............</span><span>الدرجة: ......</span></div>`}</div>`;
+    <div>الصف الثاني الإعدادي — الاختبار الأول — ${label}</div>
+    ${A ? "" : `<div class="meta"><span>الاسم: ........................................</span><span>الصف: ............</span><span>الدرجة: ${mine ? `${qs.filter(q=>state[q.id]?.correct).length} / ${qs.length}` : "......"}</span></div>`}
+    ${mine ? `<div class="meta"><span>تمت الإجابة: ${qs.filter(q=>state[q.id]?.done).length} من ${qs.length}</span><span>التاريخ: ${new Date().toLocaleDateString("ar")}</span></div>` : ""}</div>`;
   secs.forEach(s => {
     if (scope !== "exam") h += `<h2>${s.icon} ${s.full}</h2>`;
     s.parts.forEach(p => {
       if (scope !== "exam") h += `<h3>${p.title}</h3>`;
-      if (p.note) h += `<div style="font-size:11pt;color:#7a5a12">${p.note}</div>`;
-      p.qs.forEach((q,i) => h += printQ(q, i+1, A));
+      if (p.note && !mine) h += `<div style="font-size:11pt;color:#7a5a12">${p.note}</div>`;
+      p.qs.forEach((q,i) => h += mine ? printMine(q, i+1) : printQ(q, i+1, A));
     });
   });
   h += `<div class="ps-foot">بالتوفيق والنجاح 🌙</div></div>`;
@@ -760,7 +910,15 @@ function buildPrint(scope, A){
 }
 
 const modal = document.getElementById("printModal");
-function openPrint(){ modal.classList.add("show"); }
+function openPrint(){
+  // استرجاع آخر اختيار للطباعة
+  const pr = ui.print || {};
+  const sc = document.querySelector(`input[name=pScope][value="${pr.scope}"]`); if (sc) sc.checked = true;
+  const md = document.querySelector(`input[name=pMode][value="${pr.mode}"]`); if (md) md.checked = true;
+  const d = SECTIONS.flatMap(allQs).filter(q=>state[q.id]?.done).length;
+  document.getElementById("mineCount").textContent = d ? `(${d} إجابة محفوظة)` : "(لا توجد إجابات محفوظة بعد)";
+  modal.classList.add("show");
+}
 function printCta(){
   const d = el("div",{class:"print-cta"});
   const b = el("button",{class:"btn"},"🖨 طباعة / تصدير ملخص المراجعة (PDF)");
@@ -771,14 +929,26 @@ document.getElementById("closePrint").onclick = () => modal.classList.remove("sh
 modal.onclick = e => { if (e.target === modal) modal.classList.remove("show"); };
 document.getElementById("doPrint").onclick = () => {
   const scope = document.querySelector("input[name=pScope]:checked").value;
-  const A = document.querySelector("input[name=pMode]:checked").value === "1";
-  buildPrint(scope, A);
+  const mode = document.querySelector("input[name=pMode]:checked").value;
+  ui.print = {scope, mode}; saveUI();
+  save(); // التأكد من حفظ كل الإجابات قبل الطباعة
+  buildPrint(scope, mode);
   modal.classList.remove("show");
   setTimeout(() => window.print(), 150);
 };
 
-/* أزرار عامة */
-document.getElementById("resetBtn").onclick = () => { if (confirm("هل تريد مسح جميع الإجابات والبدء من جديد؟")) { state = {}; save(); render(); } };
+/* ============ إعادة الضبط ============ */
+function resetAll(){
+  if (!confirm("سيتم مسح جميع الإجابات المحفوظة على هذا الجهاز والبدء من جديد.\nهل أنت متأكد؟")) return;
+  state = {}; ui = {tab:"exam", print:ui.print};
+  try { localStorage.removeItem(KEY); } catch(e){}
+  saveUI(); save();
+  current = "exam"; render(); window.scrollTo({top:0});
+  toast("🗑 تم مسح الإجابات المحفوظة — ابدأ اختباراً تجريبياً جديداً");
+}
+document.getElementById("resetBtn").onclick = resetAll;
+
+/* ============ الوضع الليلي ============ */
 const themeBtn = document.getElementById("themeBtn");
 function applyTheme(t){ if (t) document.documentElement.dataset.theme = t; }
 try { applyTheme(localStorage.getItem(KEY+"-theme")); } catch(e){}
@@ -788,7 +958,21 @@ themeBtn.onclick = () => {
   try { localStorage.setItem(KEY+"-theme", t); } catch(e){}
 };
 
+/* ============ البدء واستعادة التقدم ============ */
 render();
+showSaveStatus();
+const savedCount = Object.values(state).filter(s => s.done || s.draft).length;
+if (savedCount){
+  const card = ui.lastQ && document.getElementById("q-" + ui.lastQ);
+  if (card){
+    card.scrollIntoView({block:"center"});
+    card.classList.add("resume");
+    setTimeout(() => card.classList.remove("resume"), 2500);
+  }
+  toast(`✔ تم استعادة تقدمك المحفوظ (الإجابات المحفوظة: ${savedCount})${card ? " — تابع من حيث توقفت" : ""}`);
+}
+// حفظ أخير عند إغلاق الصفحة
+window.addEventListener("pagehide", () => { save(); saveUI(); });
 </script>
 </body>
 </html>
